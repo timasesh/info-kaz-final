@@ -14,7 +14,7 @@
                 <li class="breadcrumb-item active" aria-current="page">{{ news.title }}</li>
             </ol>
         </nav>
-
+<div>sndfmsdds[',ds</div>
         <article class="card mb-4">
             <div class="card-body">
 
@@ -96,18 +96,44 @@
     </div>
 </div>
 {% endblock %} 
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const btn = document.getElementById('like-btn');
     if (!btn) return;
+    
+    // Get CSRF token from cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
     btn.addEventListener('click', function() {
         fetch(`/news/${btn.dataset.newsId}/like/`, {
             method: 'POST',
             headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
-            }
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             btn.classList.toggle('liked', data.liked);
             document.getElementById('likes-count').innerText = data.likes_count;
@@ -116,6 +142,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.querySelector('.like-heart').classList.add('pop');
                 setTimeout(() => btn.querySelector('.like-heart').classList.remove('pop'), 400);
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
     });
 });
