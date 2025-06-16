@@ -1,0 +1,219 @@
+{% extends 'news/admin/admin_base.html' %}
+{% load static %}
+
+{% block admin_content %}
+<div class="container mt-4">
+    <h2>Редактирование футера сайта</h2>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Предпросмотр футера</h3>
+        </div>
+        <div class="card-body">
+            <div class="footer-preview">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3 id="preview_site_name" style="font-size: {{ footer_content.site_name_font_size }};">{{ footer_content.site_name }}</h3>
+                        <p id="preview_copyright_text" style="font-size: {{ footer_content.copyright_text_font_size }};">{{ footer_content.copyright_text }}</p>
+                        <p id="preview_registration_info" style="font-size: {{ footer_content.registration_info_font_size }};">{{ footer_content.registration_info }}</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p id="preview_editor_info" style="font-size: {{ footer_content.editor_info_font_size }};">{{ footer_content.editor_info }}</p>
+                    </div>
+                </div>
+                 {% comment %}
+                Отображение дополнительных полей в предпросмотре
+                {% endcomment %}
+                <div id="extra-fields-preview">
+                    {% for key, text, font_size in extra_fields_list %}
+                        <p class="extra-field-preview-item" data-index="{{ forloop.counter0 }}" style="font-size: {{ font_size }};"><strong><span class="extra-field-preview-key">{{ key }}</span>:</strong> <span class="extra-field-preview-value">{{ text }}</span></p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Редактирование содержимого</h3>
+        </div>
+        <div class="card-body">
+            <form method="post" id="footer-edit-form">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="site_name" class="form-label">Название сайта</label>
+                    <div class="row g-2">
+                        <div class="col-md-9">
+                             <input type="text" class="form-control" id="site_name" name="site_name" 
+                               value="{{ footer_content.site_name }}" required>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="number" class="form-control font-size-input" id="site_name_font_size" name="site_name_font_size" 
+                                   value="{{ font_sizes_display.site_name_font_size }}" step="0.1" min="0.1" max="5" placeholder="{{ font_sizes_display.site_name_font_size }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="copyright_text" class="form-label">Текст копирайта</label>
+                     <div class="row g-2">
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="copyright_text" name="copyright_text" 
+                                value="{{ footer_content.copyright_text }}" required>
+                         </div>
+                        <div class="col-md-3">
+                            <input type="number" class="form-control font-size-input" id="copyright_text_font_size" name="copyright_text_font_size" 
+                                   value="{{ font_sizes_display.copyright_text_font_size }}" step="0.1" min="0.1" max="5" placeholder="{{ font_sizes_display.copyright_text_font_size }}">
+                         </div>
+                    </div>
+                </div>
+
+                {# Регистрационная информация (опционально) #}
+                <div class="mb-3" id="registration_info_group">
+                     {% if show_registration_info_input %}
+                          <label for="registration_info" class="form-label">Информация о регистрации</label>
+                          <div class="row g-2">
+                             <div class="col-md-9">
+                                 <input type="text" class="form-control" id="registration_info" name="registration_info" 
+                                        value="{{ footer_content.registration_info }}">
+                             </div>
+                             <div class="col-md-3">
+                                  <input type="number" class="form-control font-size-input" id="registration_info_font_size" name="registration_info_font_size" 
+                                        value="{{ font_sizes_display.registration_info_font_size }}" step="0.1" min="0.1" max="5" placeholder="{{ font_sizes_display.registration_info_font_size }}">
+                             </div>
+                         </div>
+                     {% else %}
+                         <button type="button" class="btn btn-outline-secondary btn-sm" onclick="showField('registration_info')">
+                             <i class="bi bi-plus-circle"></i> Добавить информацию о регистрации
+                         </button>
+                         {# Hidden input for initial state to allow submission if button not clicked #}
+                         <input type="text" class="form-control mt-2" id="registration_info" name="registration_info" value="" style="display: none;">
+                         <input type="hidden" name="registration_info_font_size" value="{{ font_sizes_display.registration_info_font_size }}rem"> {# Hidden font size for consistency #}
+                     {% endif %}
+                </div>
+
+                {# Информация о редакторе (опционально) #}
+                 <div class="mb-3" id="editor_info_group">
+                     {% if show_editor_info_input %}
+                          <label for="editor_info" class="form-label">Информация о редакторе</label>
+                          <div class="row g-2">
+                              <div class="col-md-9">
+                                  <input type="text" class="form-control" id="editor_info" name="editor_info" 
+                                         value="{{ footer_content.editor_info }}">
+                              </div>
+                              <div class="col-md-3">
+                                  <input type="number" class="form-control font-size-input" id="editor_info_font_size" name="editor_info_font_size" 
+                                         value="{{ font_sizes_display.editor_info_font_size }}" step="0.1" min="0.1" max="5" placeholder="{{ font_sizes_display.editor_info_font_size }}">
+                              </div>
+                          </div>
+                     {% else %}
+                          <button type="button" class="btn btn-outline-secondary btn-sm" onclick="showField('editor_info')">
+                             <i class="bi bi-plus-circle"></i> Добавить информацию о редакторе
+                         </button>
+                           {# Hidden input for initial state to allow submission if button not clicked #}
+                          <input type="text" class="form-control mt-2" id="editor_info" name="editor_info" value="" style="display: none;">
+                           <input type="hidden" name="editor_info_font_size" value="{{ font_sizes_display.editor_info_font_size }}rem"> {# Hidden font size for consistency #}
+                     {% endif %}
+                </div>
+
+                {# Дополнительные поля #}
+                <hr>
+                <h4>Дополнительные поля</h4>
+                <div id="extra-fields-container">
+                    {% for key, text, font_size in extra_fields_list %}
+                        <div class="row mb-3 extra-field-row">
+                            <div class="col">
+                                <input type="text" class="form-control extra-field-key" name="extra_field_key_{{ forloop.counter0 }}" value="{{ key }}" placeholder="Название поля">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control extra-field-value" name="extra_field_value_{{ forloop.counter0 }}" value="{{ text }}" placeholder="Значение">
+                            </div>
+                             <div class="col-md-3">
+                                 <input type="number" class="form-control font-size-input extra-field-font-size" name="extra_field_font_size_{{ forloop.counter0 }}" value="{{ font_size }}" step="0.1" min="0.1" max="5" placeholder="{{ font_size }}">
+                             </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-danger remove-extra-field"><i class="bi bi-x-circle"></i></button>
+                            </div>
+                        </div>
+                    {% empty %}
+                         {# Добавляем хотя бы одно пустое поле, если дополнительных нет #}
+                          <div class="row mb-3 extra-field-row">
+                            <div class="col">
+                                <input type="text" class="form-control extra-field-key" name="extra_field_key_0" placeholder="Название поля">
+                            </div>
+                             <div class="col-md-6">
+                                 <input type="text" class="form-control extra-field-value" name="extra_field_value_0" placeholder="Значение">
+                             </div>
+                              <div class="col-md-3">
+                                 <input type="number" class="form-control font-size-input extra-field-font-size" name="extra_field_font_size_0" value="0.9" step="0.1" min="0.1" max="5" placeholder="0.9">
+                              </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-danger remove-extra-field" style="display: none;"><i class="bi bi-x-circle"></i></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <button type="button" class="btn btn-secondary" id="add-extra-field"><i class="bi bi-plus-circle"></i> Добавить поле</button>
+
+                <hr>
+                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.footer-preview {
+    background: #1a237e; /* Цвет фона как на сайте */
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    color: #FFD700; /* Цвет текста как на сайте */
+}
+.footer-preview p {
+    margin-bottom: 5px; 
+    color: #FFD700; /* Цвет текста параграфов */
+}
+.footer-preview h3 {
+     color: #FFD700; /* Цвет текста заголовка */
+}
+
+/* Adjust column padding for input groups */
+.row.g-2 > .col-md-9, .row.g-2 > .col-md-3 {
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    padding-right: calc(var(--bs-gutter-x) * .5);
+}
+
+.extra-field-row .col, .extra-field-row .col-md-6, .extra-field-row .col-md-3, .extra-field-row .col-auto {
+     padding-right: 5px;
+    padding-left: 5px;
+}
+.extra-field-row .col:first-child, .extra-field-row .col-md-6:first-child, .extra-field-row .col-md-3:first-child, .extra-field-row .col-auto:first-child {
+    padding-left: 0;
+}
+.extra-field-row .col:last-child, .extra-field-row .col-md-6:last-child, .extra-field-row .col-md-3:last-child, .extra-field-row .col-auto:last-child {
+    padding-right: 0;
+}
+
+/* Custom styles for number inputs */
+.font-size-input::-webkit-inner-spin-button,
+.font-size-input::-webkit-outer-spin-button {
+    opacity: 1;
+    height: 2em;
+    margin-right: 5px;
+}
+
+.font-size-input {
+    padding-right: 0;
+}
+
+</style>
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'news/admin/css/footer_edit_admin.css' %}">
+{% endblock extra_css %}
+
+{% block extra_js %}
+<script src="{% static 'news/admin/js/footer_edit_admin.js' %}"></script>
+{% endblock extra_js %}
+{% endblock admin_content %} 

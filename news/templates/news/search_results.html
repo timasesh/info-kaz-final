@@ -1,0 +1,80 @@
+{% extends 'news/base.html' %}
+
+{% block title %}Поиск: {{ search_query }} - INFO_KAZ{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'news:index' %}" class="text-decoration-none">Главная</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Результаты поиска</li>
+            </ol>
+        </nav>
+
+        <div class="card">
+            <div class="card-header bg-white">
+                <h2 class="mb-0">Результаты поиска</h2>
+                <p class="text-muted mb-0 mt-2">
+                    Поиск по запросу: "{{ search_query }}"
+                </p>
+            </div>
+            <div class="card-body">
+                {% if news_list %}
+                    {% for news in news_list %}
+                        <article class="card mb-4">
+                            <div class="row g-0">
+                                {% if news.image %}
+                                    <div class="col-md-4 card-img-top-container">
+                                        <a href="{% url 'news:news_detail' news.slug %}">
+                                            <img src="{{ news.image.url }}" class="img-fluid rounded-start" alt="{{ news.title }}">
+                                        </a>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h3 class="card-title h5">
+                                                <a href="{% url 'news:news_detail' news.slug %}" class="news-title-link">
+                                                    {{ news.title }}
+                                                </a>
+                                            </h3>
+                                            <p class="card-text">{{ news.content|truncatewords:30 }}</p>
+                                            <div class="d-flex align-items-center text-muted">
+                                                <i class="bi bi-folder me-2"></i>
+                                                <span class="me-3">{{ news.category.name }}</span>
+                                                <i class="bi bi-clock me-2"></i>
+                                                <small>{{ news.created_at|date:"d.m.Y H:i" }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="col-12">
+                                        <div class="card-body">
+                                            <h3 class="card-title h5">
+                                                <a href="{% url 'news:news_detail' news.slug %}" class="news-title-link">
+                                                    {{ news.title }}
+                                                </a>
+                                            </h3>
+                                            <p class="card-text">{{ news.content|truncatewords:30 }}</p>
+                                            <div class="d-flex align-items-center text-muted">
+                                                <i class="bi bi-folder me-2"></i>
+                                                <span class="me-3">{{ news.category.name }}</span>
+                                                <i class="bi bi-clock me-2"></i>
+                                                <small>{{ news.created_at|date:"d.m.Y H:i" }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </article>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        По вашему запросу "{{ search_query }}" ничего не найдено.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

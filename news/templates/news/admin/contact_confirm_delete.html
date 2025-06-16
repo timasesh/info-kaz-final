@@ -1,0 +1,29 @@
+{% extends 'news/admin/admin_base.html' %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header bg-white">
+        <h1 class="h3 mb-0">Удаление сообщения</h1>
+    </div>
+    <div class="card-body">
+        <p class="mb-4">Вы уверены, что хотите удалить сообщение от {{ message.name }}?</p>
+        
+        <div class="alert alert-info">
+            <h5 class="alert-heading">{{ message.subject }}</h5>
+            <p class="mb-0">{{ message.message|truncatewords:30 }}</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="btn-group">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash me-2"></i>Удалить
+                </button>
+                <a href="{% url 'news:admin_contact_detail' message.id %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x me-2"></i>Отмена
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

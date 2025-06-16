@@ -1,0 +1,86 @@
+{% extends 'news/base.html' %}
+
+{% block title %}{{ news.title }} - INFO_KAZ{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-9 ps-md-2">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'news:index' %}" class="text-decoration-none">Главная</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'news:category_detail' category_slug=news.category.slug %}" class="text-decoration-none">{{ news.category.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ news.title }}</li>
+            </ol>
+        </nav>
+
+        <article class="card mb-4">
+            <div class="card-body">
+
+                <header class="mb-4">
+                    <h1 class="card-title display-5 fw-bold">{{ news.title }}</h1>
+                    <div class="d-flex align-items-center text-muted mb-3">
+                        <i class="bi bi-folder me-2"></i>
+                        <span class="me-3">{{ news.category.name }}</span>
+                        <i class="bi bi-clock me-2"></i>
+                        <span>{{ news.created_at|date:"d.m.Y H:i" }}</span>
+                    </div>
+                </header>
+
+                {% if news.image %}
+                <figure class="mb-4">
+                    <img src="{{ news.image.url }}" class="img-fluid rounded" alt="{{ news.title }}" style="max-height: 500px; width: 100%; object-fit: cover;">
+                </figure>
+                {% endif %}
+
+                <div class="news-content">
+                    {{ news.content|safe }}
+                </div>
+
+            </div>
+        </article>
+
+        {# Share button and links using Bootstrap Dropdown #}
+        <div class="mt-4">
+            <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="shareDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-share me-2"></i>Поделиться
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="shareDropdown">
+                    {% with current_url=request.build_absolute_uri news_title=news.title|urlencode %}
+                    <li><a class="dropdown-item" href="https://twitter.com/intent/tweet?url={{ current_url }}&text={{ news_title }}" target="_blank"><i class="bi bi-twitter me-2"></i>Twitter</a></li>
+                    <li><a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{ current_url }}" target="_blank"><i class="bi bi-facebook me-2"></i>Facebook</a></li>
+                    <li><a class="dropdown-item" href="https://t.me/share/url?url={{ current_url }}&text={{ news_title }}" target="_blank"><i class="bi bi-telegram me-2"></i>Telegram</a></li>
+                    <li><a class="dropdown-item" href="mailto:?subject={{ news_title }}&body={{ current_url }}"><i class="bi bi-envelope me-2"></i>Email</a></li>
+                    {% endwith %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a href="{% url 'news:category_detail' category_slug=news.category.slug %}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left me-2"></i>Вернуться к списку новостей
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-3 ps-md-3">
+        <div class="card mb-4">
+            <div class="card-header">Рекомендованные новости</div>
+            <div class="card-body">
+                {% if recommended_news %}
+                    <ul class="list-unstyled">
+                        {% for rec_news in recommended_news %}
+                            <li class="mb-3">
+                                <h6 class="mb-1"><a href="{% url 'news:news_detail' rec_news.slug %}" class="news-title-link">{{ rec_news.title }}</a></h6>
+                                <small class="text-muted">{{ rec_news.created_at|date:"d.m.Y" }}</small>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Нет рекомендованных новостей.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

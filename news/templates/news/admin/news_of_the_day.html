@@ -1,0 +1,42 @@
+{% extends 'news/admin/admin_base.html' %}
+
+{% block title %}Новость дня{% endblock %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Выбор новости дня</h2>
+    </div>
+    <div class="card-body">
+        {% if current_news_of_the_day %}
+            <div class="alert alert-info">
+                Текущая новость дня: <strong>{{ current_news_of_the_day.title }}</strong>
+                <form action="{% url 'news:admin_news_of_the_day' %}" method="post" class="d-inline ms-3">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-warning">Снять</button>
+                </form>
+            </div>
+        {% else %}
+            <div class="alert alert-secondary">
+                Новость дня не выбрана.
+            </div>
+        {% endif %}
+
+        <h4 class="mt-4">Выберите новость из списка:</h4>
+        <ul class="list-group">
+            {% for news in news_list %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ news.title }}
+                    <form action="{% url 'news:admin_news_of_the_day' %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="news_slug" value="{{ news.slug }}">
+                        <button type="submit" class="btn btn-sm btn-primary">Сделать новостью дня</button>
+                    </form>
+                </li>
+            {% empty %}
+                <li class="list-group-item">Нет доступных новостей для выбора.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %} 

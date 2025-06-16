@@ -1,0 +1,53 @@
+.footer-preview {
+    background: #1a237e; /* Цвет фона как на сайте */
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    color: #FFD700; /* Цвет текста как на сайте */
+}
+.footer-preview p {
+    margin-bottom: 5px;
+    color: #FFD700; /* Цвет текста параграфов */
+}
+.footer-preview h3 {
+     color: #FFD700; /* Цвет текста заголовка */
+}
+
+/* Adjust column padding for input groups */
+.row.g-2 > .col-md-9,
+.row.g-2 > .col-md-3 {
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    padding-right: calc(var(--bs-gutter-x) * .5);
+}
+
+.extra-field-row .col,
+.extra-field-row .col-md-6,
+.extra-field-row .col-md-3,
+.extra-field-row .col-auto {
+     padding-right: 5px;
+    padding-left: 5px;
+}
+.extra-field-row .col:first-child,
+.extra-field-row .col-md-6:first-child,
+.extra-field-row .col-md-3:first-child,
+.extra-field-row .col-auto:first-child {
+    padding-left: 0;
+}
+.extra-field-row .col:last-child,
+.extra-field-row .col-md-6:last-child,
+.extra-field-row .col-md-3:last-child,
+.extra-field-row .col-auto:last-child {
+    padding-right: 0;
+}
+
+/* Custom styles for number inputs */
+.font-size-input::-webkit-inner-spin-button,
+.font-size-input::-webkit-outer-spin-button {
+    opacity: 1;
+    height: 2em;
+    margin-right: 5px;
+}
+
+.font-size-input {
+    padding-right: 0;
+} 

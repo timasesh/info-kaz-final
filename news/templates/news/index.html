@@ -1,0 +1,106 @@
+{% extends 'news/base.html' %}
+{% load static %}
+
+{% block title %}Главная - INFO_KAZ{% endblock %}
+
+{% block content %}
+{% if news_of_the_day %}
+<div class="card news-of-the-day-card">
+    <div class="row g-0">
+        {% if news_of_the_day.image %}
+        <div class="col-md-8">
+            <div class="img-container">
+                 <a href="{% url 'news:news_detail' news_of_the_day.slug %}">
+                    <img src="{{ news_of_the_day.image.url }}" class="img-fluid" alt="{{ news_of_the_day.title }}">
+                 </a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-body">
+                <h2 class="card-title">
+                     <a href="{% url 'news:news_detail' news_of_the_day.slug %}" class="news-title-link">
+                        {{ news_of_the_day.title }}
+                     </a>
+                </h2>
+                <p class="card-text">{{ news_of_the_day.content|safe|truncatewords:50 }}</p>
+                 <div class="d-flex justify-content-between align-items-center mt-2">
+                    <a href="{% url 'news:news_detail' news_of_the_day.slug %}" class="btn btn-primary">Читать далее</a>
+                    <div class="d-flex align-items-center text-muted">
+                        <i class="bi bi-clock me-2"></i>
+                        <small class="me-3">{{ news_of_the_day.created_at|date:"d.m.Y H:i" }}</small>
+                        <i class="bi bi-eye me-1"></i>
+                        <small>{{ news_of_the_day.views_count }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+         <div class="col-12">
+            <div class="card-body">
+                <h2 class="card-title">
+                     <a href="{% url 'news:news_detail' news_of_the_day.slug %}" class="news-title-link">
+                        {{ news_of_the_day.title }}
+                     </a>
+                </h2>
+                <p class="card-text">{{ news_of_the_day.content|safe|truncatewords:50 }}</p>
+                 <div class="d-flex justify-content-between align-items-center mt-2">
+                    <a href="{% url 'news:news_detail' news_of_the_day.slug %}" class="btn btn-primary">Читать далее</a>
+                     <div class="d-flex align-items-center text-muted">
+                        <i class="bi bi-clock me-2"></i>
+                        <small class="me-3">{{ news_of_the_day.created_at|date:"d.m.Y H:i" }}</small>
+                        <i class="bi bi-eye me-1"></i>
+                        <small>{{ news_of_the_day.views_count }}</small>
+                    </div>
+                </div>
+            </div>
+         </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<h2 class="mb-4">Последние новости</h2>
+
+{% if news_list %}
+    <div class="row">
+            {% for news in news_list %}
+            <div class="col-md-4 col-sm-6 mb-4">
+                <article class="card news-card">
+                        {% if news.image %}
+                        <div class="card-img-top-container">
+                                <a href="{% url 'news:news_detail' news.slug %}">
+                                <img src="{{ news.image.url }}" class="img-fluid" alt="{{ news.title }}">
+                                </a>
+                            </div>
+                     {% endif %}
+                                <div class="card-body">
+                        <h3 class="card-title h6">
+                                        <a href="{% url 'news:news_detail' news.slug %}" class="news-title-link">
+                                {{ news.title|truncatechars:50 }}
+                                        </a>
+                                    </h3>
+                        {# <p class="card-text d-inline">{{ news.content|safe|truncatewords:15 }}</p> #}
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <a href="{% url 'news:news_detail' news.slug %}" class="btn btn-sm btn-outline-primary">Читать</a>
+                            <div class="d-flex align-items-center text-muted">
+                                <i class="bi bi-clock me-1"></i>
+                                <small class="me-2">{{ news.created_at|date:"d.m.Y" }}</small>
+                                <i class="bi bi-eye me-1"></i>
+                                <small>{{ news.views_count }}</small>
+                                </div>
+                            </div>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        {% if news_of_the_day %}
+            Больше нет новостей для отображения.
+        {% else %}
+        Новостей пока нет.
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %} 

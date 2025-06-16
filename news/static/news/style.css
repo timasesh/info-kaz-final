@@ -1,0 +1,615 @@
+/* Styles for the news application */
+
+:root {
+    --primary-color: #1a237e;
+    --secondary-color: #0d47a1;
+    --accent-color: #2962ff;
+    --text-color: #333;
+    --light-gray: #f8f9fa;
+    --border-color: #e0e0e0;
+    --gold-color: #FFD700; /* Gold color for links */
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-color);
+    background-color: white; /* White background color */
+    line-height: 1.6;
+}
+
+.navbar {
+    background-color: var(--primary-color) !important;
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.navbar-nav {
+    flex-wrap: wrap;
+}
+
+.nav-link {
+    color: var(--gold-color) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: all 0.3s ease;
+    text-decoration: none !important; /* Remove underline */
+}
+
+.nav-link:hover, .nav-link.active {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background on hover/active */
+    border-radius: 20px; /* Keep it round */
+    text-decoration: none !important; /* Ensure no underline on hover/active */
+}
+
+.search-form {
+    position: relative;
+    max-width: 300px;
+}
+
+.search-form .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--gold-color);
+    color: var(--gold-color);
+    padding-right: 40px;
+}
+
+.search-form .form-control::placeholder {
+    color: rgba(255, 215, 0, 0.7); /* Semi-transparent gold for placeholder */
+}
+
+.search-form .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: white;
+    color: var(--gold-color);
+    box-shadow: none;
+}
+
+.search-form .btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    color: var(--gold-color); /* Gold color for search icon */
+    background: none;
+    border: none;
+    padding: 0 10px;
+}
+
+.search-form .btn:hover {
+    color: white; /* White color on hover */
+}
+
+.card {
+    border: 1px solid var(--border-color);
+    box-shadow: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 1.5rem;
+    background-color: white; /* White background for cards */
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background-color: var(--light-gray);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+}
+
+.card-body {
+     padding: 1.5rem;
+}
+
+.card-title {
+    font-weight: 600;
+    color: var(--primary-color); /* Primary color for card titles */
+    margin-bottom: 0.5rem;
+}
+
+.news-title-link {
+    color: var(--primary-color); /* Primary color for news titles */
+    text-decoration: none !important; /* Remove underline */
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.news-title-link:hover {
+    color: var(--secondary-color); /* Secondary color on hover */
+    text-decoration: none !important; /* Ensure no underline on hover */
+}
+
+.card-text d-inline {
+     margin-right: .5rem;
+}
+
+.card-text + a.text-decoration-none {
+     font-weight: 500;
+     color: var(--secondary-color); /* Secondary color for "Читать далее" links */
+     transition: color 0.3s ease;
+     text-decoration: none !important; /* Remove underline */
+}
+
+ .card-text + a.text-decoration-none:hover {
+     color: var(--primary-color); /* Primary color on hover */
+     text-decoration: none !important; /* Ensure no underline on hover */
+ }
+
+.card-img-top-container {
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.card-img-top-container img {
+    transition: transform 0.3s ease;
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.card-img-top-container img:hover {
+    transform: scale(1.05);
+}
+
+.text-muted {
+    color: #666 !important;
+}
+
+.container {
+    max-width: 1200px;
+    padding: 0 1.5rem;
+    background-color: transparent;
+}
+
+footer {
+    background-color: var(--primary-color);
+    color: var(--gold-color); /* Change footer text color to gold */
+    padding: 2.5rem 0;
+    margin-top: 3rem;
+}
+
+footer a {
+    color: var(--gold-color); /* Primary color for footer links */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: white; /* White color on hover */
+    text-decoration: none;
+}
+
+footer p {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--gold-color); /* Also set paragraph color to gold */
+}
+
+footer .footer-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.contact-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--primary-color); /* Primary background for contact button */
+    color: white; /* White text */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.contact-button:hover {
+    background-color: white; /* White background on hover */
+    color: var(--primary-color); /* Primary color text on hover */
+    transform: scale(1.1);
+}
+
+.contact-button i {
+    font-size: 1.5rem;
+    color: white; /* White color for icon */
+}
+
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .card-img-top-container img {
+        height: 150px;
+    }
+
+    .search-form {
+        max-width: 100%;
+        margin-top: 1rem;
+    }
+
+    .contact-button {
+        width: 50px;
+        height: 50px;
+        bottom: 1rem;
+        right: 1rem;
+    }
+}
+
+/* General link styling within the main container */
+.container a {
+    color: var(--primary-color); /* Primary color for general links */
+    text-decoration: none !important;
+    transition: color 0.3s ease;
+}
+
+.container a:hover {
+    color: var(--secondary-color); /* Secondary color on hover */
+    text-decoration: none !important;
+}
+
+/* Styles for карточек новостей на главной */
+.news-card {
+    border: 1px solid var(--border-color); /* Добавляем границу */
+    margin-bottom: 1.5rem;
+    background-color: white;
+    box-shadow: none; /* Убираем тень по умолчанию */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ensure cards take full height in grid */
+}
+
+.news-card:hover {
+    transform: translateY(-3px); /* Эффект при наведении */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.news-card .card-header {
+    background-color: var(--light-gray); /* Светлый фон для заголовка */
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+}
+
+.news-card .card-body {
+    padding: 1.5rem;
+    flex-grow: 1; /* Allow card body to grow and take available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Push footer to the bottom */
+}
+
+.news-card .news-title-link {
+    color: var(--primary-color);
+    text-decoration: none !important; /* Убираем подчеркивание */
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.news-card .news-title-link:hover {
+    color: var(--accent-color);
+    /* text-decoration: underline; */ /* Убираем подчеркивание при наведении */
+}
+
+.news-card .card-text.d-inline {
+     margin-right: .5rem;
+}
+
+.news-card .card-text + a.text-decoration-none {
+     font-weight: 500;
+     color: var(--secondary-color);
+     transition: color 0.3s ease;
+}
+
+ .news-card .card-text + a.text-decoration-none:hover {
+     color: var(--primary-color);
+ }
+ /* Убираем подчеркивание у названия сайта в шапке */
+ .navbar-brand {
+    text-decoration: none !important;
+ }
+
+ .news-card .card-img-top-container {
+     width: 100%; /* Make image container take full width */
+     padding-top: 75%; /* Aspect ratio 4:3 (height is 75% of width) - Adjust for more square-like */
+     position: relative;
+     overflow: hidden;
+ }
+
+ .news-card .card-img-top-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Обрезка изображения, если оно не соответствует пропорциям */
+    transition: transform 0.3s ease;
+ }
+
+ .news-card .card-img-top-container img:hover {
+    transform: scale(1.05);
+ }
+
+.text-muted {
+    color: #666 !important;
+}
+
+/* Styles for News of the Day */
+.news-of-the-day-card {
+    margin-bottom: 3rem;
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    background-color: var(--light-gray);
+}
+
+.news-of-the-day-card .row {
+    align-items: center;
+}
+
+.news-of-the-day-card .img-container {
+    position: relative;
+    /* padding-top: 56.25%; /* 16:9 Aspect Ratio */ */
+    padding-top: 65%; /* Adjust aspect ratio */
+    overflow: hidden;
+}
+
+.news-of-the-day-card .img-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.news-of-the-day-card .img-container img:hover {
+    transform: scale(1.05);
+}
+
+.news-of-the-day-card .card-body {
+    padding: 2rem;
+}
+
+.news-of-the-day-card .card-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.news-of-the-day-card .card-text {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+}
+
+.news-of-the-day-card .text-muted {
+     font-size: 0.9rem;
+}
+
+.news-of-the-day-card a.news-title-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.news-of-the-day-card a.news-title-link:hover {
+    color: var(--secondary-color);
+}
+
+@media (max-width: 768px) {
+    .news-of-the-day-card .img-container {
+         padding-top: 56.25%; /* Revert to 16:9 on smaller screens */
+    }
+
+    .news-of-the-day-card .card-body {
+        padding: 1.5rem;
+    }
+
+    .news-of-the-day-card .card-title {
+        font-size: 1.5rem;
+    }
+
+    .news-of-the-day-card .card-text {
+        font-size: 1rem;
+    }
+
+    .news-card .card-img-top-container {
+         padding-top: 75%; /* Keep aspect ratio for square cards */
+    }
+}
+
+/* Styles from index.html */
+
+/* Стили для карточек новостей на главной */
+.news-card {
+    border: 1px solid var(--border-color); /* Добавляем границу */
+    margin-bottom: 1.5rem;
+    background-color: white;
+    box-shadow: none; /* Убираем тень по умолчанию */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ensure cards take full height in grid */
+}
+
+.news-card:hover {
+    transform: translateY(-3px); /* Эффект при наведении */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.news-card .card-header {
+    background-color: var(--light-gray); /* Светлый фон для заголовка */
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+}
+
+.news-card .card-body {
+    padding: 1.5rem;
+    flex-grow: 1; /* Allow card body to grow and take available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Push footer to the bottom */
+}
+
+.news-card .news-title-link {
+    color: var(--primary-color);
+    text-decoration: none !important; /* Убираем подчеркивание */
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.news-card .news-title-link:hover {
+    color: var(--accent-color);
+    /* text-decoration: underline; */ /* Убираем подчеркивание при наведении */
+}
+
+.news-card .card-text.d-inline {
+     margin-right: .5rem;
+}
+
+.news-card .card-text + a.text-decoration-none {
+     font-weight: 500;
+     color: var(--secondary-color);
+     transition: color 0.3s ease;
+}
+
+ .news-card .card-text + a.text-decoration-none:hover {
+     color: var(--primary-color);
+ }
+ /* Убираем подчеркивание у названия сайта в шапке */
+ .navbar-brand {
+    text-decoration: none !important;
+ }
+
+ .news-card .card-img-top-container {
+     width: 100%; /* Make image container take full width */
+     padding-top: 75%; /* Aspect ratio 4:3 (height is 75% of width) - Adjust for more square-like */
+     position: relative;
+     overflow: hidden;
+ }
+
+ .news-card .card-img-top-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Обрезка изображения, если оно не соответствует пропорциям */
+    transition: transform 0.3s ease;
+ }
+
+ .news-card .card-img-top-container img:hover {
+    transform: scale(1.05);
+ }
+
+.text-muted {
+    color: #666 !important;
+}
+
+/* Styles for News of the Day */
+.news-of-the-day-card {
+    margin-bottom: 3rem;
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    background-color: var(--light-gray);
+}
+
+.news-of-the-day-card .row {
+    align-items: center;
+}
+
+.news-of-the-day-card .img-container {
+    position: relative;
+    /* padding-top: 56.25%; /* 16:9 Aspect Ratio */ */
+    padding-top: 65%; /* Adjust aspect ratio */
+    overflow: hidden;
+}
+
+.news-of-the-day-card .img-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.news-of-the-day-card .img-container img:hover {
+    transform: scale(1.05);
+}
+
+.news-of-the-day-card .card-body {
+    padding: 2rem;
+}
+
+.news-of-the-day-card .card-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.news-of-the-day-card .card-text {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+}
+
+.news-of-the-day-card .text-muted {
+     font-size: 0.9rem;
+}
+
+.news-of-the-day-card a.news-title-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.news-of-the-day-card a.news-title-link:hover {
+    color: var(--secondary-color);
+}
+
+@media (max-width: 768px) {
+    .news-of-the-day-card .img-container {
+         padding-top: 56.25%; /* Revert to 16:9 on smaller screens */
+    }
+
+    .news-of-the-day-card .card-body {
+        padding: 1.5rem;
+    }
+
+    .news-of-the-day-card .card-title {
+        font-size: 1.5rem;
+    }
+
+    .news-of-the-day-card .card-text {
+        font-size: 1rem;
+    }
+
+    .news-card .card-img-top-container {
+         padding-top: 75%; /* Keep aspect ratio for square cards */
+    }
+}
+
+} 

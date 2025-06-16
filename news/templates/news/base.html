@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}INFO_KAZ{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'news/style.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'news:index' %}">
+                <img src="{% static 'news/images/eagle.png' %}" alt="INFO_KAZ" height="60" class="me-2">
+                INFO_KAZ
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}" 
+                           href="{% url 'news:index' %}">
+                            Главная
+                        </a>
+                    </li>
+                    {% for category in categories %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.kwargs.category_slug == category.slug %}active{% endif %}" 
+                           href="{% url 'news:category_detail' category_slug=category.slug %}">
+                            {{ category.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <form method="get" action="{% url 'news:index' %}" class="search-form">
+                    <input type="text" name="search" class="form-control" placeholder="Поиск по сайту..." value="{{ request.GET.search }}">
+                    <button type="submit" class="btn">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <a href="{% url 'news:contact' %}" class="contact-button" title="Связаться с нами">
+        <i class="bi bi-envelope"></i>
+    </a>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="footer-title" style="font-size: {{ footer_content.site_name_font_size }};">{{ footer_content.site_name }}</div>
+                    <p style="font-size: {{ footer_content.copyright_text_font_size }};">{{ footer_content.copyright_text }}</p>
+                    <p style="font-size: {{ footer_content.registration_info_font_size }};">{{ footer_content.registration_info }}</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    {# <p>Учредитель: ТОО «ИнформСервис», ИНН: 123456789012</p> #}
+                    <p style="font-size: {{ footer_content.editor_info_font_size }};">{{ footer_content.editor_info }}</p>
+                </div>
+            </div>
+            {% comment %}
+            Отображение дополнительных полей футера
+            {% endcomment %}
+            {% for key, value in footer_content.extra_fields.items %}
+                <div class="row">
+                    <div class="col-12 text-md-end">
+                        <p style="font-size: {{ value.font_size }};"><strong>{{ key }}:</strong> {{ value.text }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

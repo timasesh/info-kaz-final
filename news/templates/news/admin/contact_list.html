@@ -1,0 +1,73 @@
+{% extends 'news/admin/admin_base.html' %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Сообщения от пользователей</h1>
+    <div class="btn-group">
+        <a href="{% url 'news:admin_contact_list' %}?status=unread" class="btn btn-outline-primary {% if request.GET.status == 'unread' %}active{% endif %}">
+            <i class="bi bi-envelope"></i> Непрочитанные
+        </a>
+        <a href="{% url 'news:admin_contact_list' %}?status=read" class="btn btn-outline-primary {% if request.GET.status == 'read' %}active{% endif %}">
+            <i class="bi bi-envelope-open"></i> Прочитанные
+        </a>
+        <a href="{% url 'news:admin_contact_list' %}" class="btn btn-outline-primary {% if not request.GET.status %}active{% endif %}">
+            <i class="bi bi-envelope-all"></i> Все
+        </a>
+    </div>
+</div>
+
+{% if messages %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Статус</th>
+                    <th>От</th>
+                    <th>Email</th>
+                    <th>Тема</th>
+                    <th>Дата</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for message in messages %}
+                    <tr class="{% if message.status == 'new' %}table-primary{% endif %}">
+                        <td>
+                            {% if message.status == 'read' %}
+                                <i class="bi bi-envelope-open text-success" title="Прочитано"></i>
+                            {% else %}
+                                <i class="bi bi-envelope text-primary" title="Непрочитано"></i>
+                            {% endif %}
+                        </td>
+                        <td>{{ message.name }}</td>
+                        <td>{{ message.email }}</td>
+                        <td>{{ message.subject }}</td>
+                        <td>{{ message.created_at|date:"d.m.Y H:i" }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{% url 'news:admin_contact_detail' message.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'news:admin_contact_delete' message.id %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        {% if request.GET.status == 'unread' %}
+            Нет непрочитанных сообщений
+        {% elif request.GET.status == 'read' %}
+            Нет прочитанных сообщений
+        {% else %}
+            Нет сообщений
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %} 
