@@ -101,7 +101,6 @@ def category_detail(request, category_slug):
         'categories': categories,
     }
     return render(request, 'news/category_detail.html', context)
-
 def news_detail(request, news_slug):
     # Allow preview of deleted news for admin users
     if request.user.is_staff and request.GET.get('preview_deleted') == 'True':
@@ -110,31 +109,32 @@ def news_detail(request, news_slug):
         news = get_object_or_404(News, slug=news_slug, is_published=True, is_deleted=False)
     
     # Increment views count only for regular views, once per session
-    # Check if the 'viewed_news' list exists in the session, create if not
     viewed_news_list = request.session.get('viewed_news', [])
 
-    # Check if the current news slug is in the viewed list
     if not (request.user.is_staff and request.GET.get('preview_deleted') == 'True') and news.slug not in viewed_news_list:
         news.views_count = F('views_count') + 1
         news.save()
-        # Add the news slug to the viewed list in session
         viewed_news_list.append(news.slug)
         request.session['viewed_news'] = viewed_news_list
-        request.session.modified = True # Mark session as modified
-        
-        # Refresh the object from DB after incrementing F() expression
+        request.session.modified = True
         news.refresh_from_db()
     
     # Get 5 random recommended news (excluding the current one)
     recommended_news = News.objects.filter(
-        is_published=True # Consider all published news for randomness
-    ).exclude(slug=news_slug).order_by('?')[:5] # Get 5 random news
+        is_published=True
+    ).exclude(slug=news_slug).order_by('?')[:5]
+
+    # Логика для лайка
+    is_liked = False
+    if request.user.is_authenticated:
+        is_liked = news.likes.filter(user=request.user).exists()
 
     categories = Category.objects.all()
     context = {
         'news': news,
-        'recommended_news': recommended_news, # Add recommended news to context
+        'recommended_news': recommended_news,
         'categories': categories,
+        'is_liked': is_liked,  # добавлено для шаблона
     }
     return render(request, 'news/news_detail.html', context)
 

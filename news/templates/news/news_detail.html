@@ -39,7 +39,7 @@
                 </div>
                 <div class="like-section mt-4">
                     <button id="like-btn"
-                            class="like-btn {% if user.is_authenticated and news.likes.filter(user=user).exists %}liked{% endif %}"
+                            class="like-btn {% if user.is_authenticated and is_liked %} liked{% endif %}"
                             data-news-id="{{ news.id }}"
                             {% if not user.is_authenticated %}disabled title="Войдите, чтобы лайкать"{% endif %}>
                         <span class="like-heart"></span>
