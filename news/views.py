@@ -324,9 +324,9 @@ def admin_login(request):
                 auth_login(request, user)
                 # Перенаправление на страницу списка новостей в админке
                 return redirect(reverse('news:admin_news_list'))
-            else:
-                # Возможно, добавить сообщение об ошибке для не-персонала
-                pass # Пока просто оставим без перенаправления
+            else:   
+                messages.error(request, 'У вас нет прав администратора')
+
     else:
         form = AuthenticationForm()
     
