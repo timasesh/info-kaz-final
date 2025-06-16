@@ -1,5 +1,7 @@
 {% extends 'news/base.html' %}
-
+{% load static %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'news/style.css' %}">
 {% block title %}{{ news.title }} - INFO_KAZ{% endblock %}
 
 {% block content %}
@@ -34,6 +36,16 @@
 
                 <div class="news-content">
                     {{ news.content|safe }}
+                </div>
+                <div class="like-section mt-4">
+                    <button id="like-btn"
+                            class="like-btn {% if user.is_authenticated and news.likes.filter(user=user).exists %}liked{% endif %}"
+                            data-news-id="{{ news.id }}"
+                            {% if not user.is_authenticated %}disabled title="Войдите, чтобы лайкать"{% endif %}>
+                        <span class="like-heart"></span>
+                        <span id="likes-count">{{ news.likes.count }}</span>
+                    </button>
+                    <span class="like-label ms-2">Понравилось</span>
                 </div>
 
             </div>
@@ -84,3 +96,27 @@
     </div>
 </div>
 {% endblock %} 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('like-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+        fetch(`/news/${btn.dataset.newsId}/like/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            btn.classList.toggle('liked', data.liked);
+            document.getElementById('likes-count').innerText = data.likes_count;
+            // Анимация сердца
+            if (data.liked) {
+                btn.querySelector('.like-heart').classList.add('pop');
+                setTimeout(() => btn.querySelector('.like-heart').classList.remove('pop'), 400);
+            }
+        });
+    });
+});
+</script>

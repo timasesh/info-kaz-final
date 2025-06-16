@@ -157,3 +157,21 @@ class FooterContent(models.Model):
             # don't create a new one
             return
         super().save(*args, **kwargs)
+
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes', verbose_name='Пользователь')
+    news = models.ForeignKey(News, on_delete=models.CASCADE, related_name='likes', verbose_name='Новость')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата лайка')
+
+    class Meta:
+        unique_together = ('user', 'news')
+        verbose_name = 'Лайк'
+        verbose_name_plural = 'Лайки'
+
+    def __str__(self):
+        return f"{self.user} лайкнул {self.news}"
+

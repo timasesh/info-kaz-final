@@ -612,4 +612,73 @@ footer .footer-title {
     }
 }
 
-} 
+ 
+.like-section {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 1.3rem;
+    transition: color 0.2s;
+    color: #888;
+    padding: 0.2em 0.5em;
+    border-radius: 50px;
+    position: relative;
+}
+
+.like-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.like-heart {
+    display: inline-block;
+    width: 1.6em;
+    height: 1.6em;
+    margin-right: 0.3em;
+    background: none;
+    position: relative;
+}
+.like-heart::before, .like-heart::after {
+    content: "";
+    position: absolute;
+    left: 0.8em;
+    top: 0.3em;
+    width: 0.8em;
+    height: 1.2em;
+    background: #e0e0e0;
+    border-radius: 0.8em 0.8em 0 0;
+    transform: rotate(-45deg);
+    transition: background 0.2s;
+}
+.like-heart::after {
+    left: 0;
+    transform: rotate(45deg);
+}
+.like-btn.liked .like-heart::before,
+.like-btn.liked .like-heart::after {
+    background: #e63946;
+}
+.like-btn.liked {
+    color: #e63946;
+}
+.like-heart.pop {
+    animation: pop-heart 0.4s;
+}
+@keyframes pop-heart {
+    0% { transform: scale(1);}
+    50% { transform: scale(1.3);}
+    100% { transform: scale(1);}
+}
+.like-label {
+    font-size: 1rem;
+    color: #888;
+}
