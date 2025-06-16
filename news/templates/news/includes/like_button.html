@@ -1,0 +1,14 @@
+{% comment %}
+Этот шаблон отображает кнопку лайка и количество лайков для новости.
+Ожидаемые переменные: news_item (объект новости), user (текущий пользователь).
+{% endcomment %}
+
+<div class="like-section mt-auto">
+    <button class="like-btn {% if user.is_authenticated and news_item.is_liked %} liked{% endif %}"
+            data-news-id="{{ news_item.id }}"
+            {% if not user.is_authenticated %}disabled title="Войдите, чтобы лайкать"{% endif %}>
+        <span class="like-heart"></span>
+        <span class="likes-count">{{ news_item.likes.count }}</span>
+    </button>
+    <span class="like-label ms-2">Понравилось</span>
+</div> 

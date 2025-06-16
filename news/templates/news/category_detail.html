@@ -80,48 +80,50 @@
 
             <div class="card-body">
                 {% if page_obj.object_list %}
-                    {% for news in page_obj.object_list %}
+                    {% for news_item in page_obj.object_list %}
                         <article class="card mb-4">
                             <div class="row g-0">
-                                {% if news.image %}
+                                {% if news_item.image %}
                                     <div class="col-md-4 text-center">
-                                        <a href="{% url 'news:news_detail' news.slug %}">
-                                            <img src="{{ news.image.url }}" class="img-fluid rounded-start" alt="{{ news.title }}" style="max-height: 250px; object-fit: cover;">
+                                        <a href="{% url 'news:news_detail' news_item.slug %}">
+                                            <img src="{{ news_item.image.url }}" class="img-fluid rounded-start" alt="{{ news_item.title }}" style="max-height: 250px; object-fit: cover;">
                                         </a>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="card-body">
                                             <h3 class="card-title h5">
-                                                <a href="{% url 'news:news_detail' news.slug %}" class="news-title-link">
-                                                    {{ news.title }}
+                                                <a href="{% url 'news:news_detail' news_item.slug %}" class="news-title-link">
+                                                    {{ news_item.title }}
                                                 </a>
                                             </h3>
-                                            <p class="card-text d-inline">{{ news.content|safe|truncatewords:30 }}</p>
-                                            <a href="{% url 'news:news_detail' news.slug %}" class="text-decoration-none">Читать далее</a>
+                                            <p class="card-text d-inline">{{ news_item.content|safe|truncatewords:30 }}</p>
+                                            <a href="{% url 'news:news_detail' news_item.slug %}" class="text-decoration-none">Читать далее</a>
                                             <div class="d-flex align-items-center text-muted mt-2">
                                                 <i class="bi bi-clock me-2"></i>
-                                                <small class="me-3">{{ news.created_at|date:"d.m.Y H:i" }}</small>
+                                                <small class="me-3">{{ news_item.created_at|date:"d.m.Y H:i" }}</small>
                                                 <i class="bi bi-eye me-1"></i>
-                                                <small>{{ news.views_count }}</small>
+                                                <small>{{ news_item.views_count }}</small>
                                             </div>
+                                            {% include 'news/includes/like_button.html' with news_item=news_item %}
                                         </div>
                                     </div>
                                 {% else %}
                                     <div class="col-12">
                                         <div class="card-body">
                                             <h3 class="card-title h5">
-                                                <a href="{% url 'news:news_detail' news.slug %}" class="news-title-link">
-                                                    {{ news.title }}
+                                                <a href="{% url 'news:news_detail' news_item.slug %}" class="news-title-link">
+                                                    {{ news_item.title }}
                                                 </a>
                                             </h3>
-                                            <p class="card-text d-inline">{{ news.content|safe|truncatewords:30 }}</p>
-                                            <a href="{% url 'news:news_detail' news.slug %}" class="text-decoration-none">Читать далее</a>
+                                            <p class="card-text d-inline">{{ news_item.content|safe|truncatewords:30 }}</p>
+                                            <a href="{% url 'news:news_detail' news_item.slug %}" class="text-decoration-none">Читать далее</a>
                                             <div class="d-flex align-items-center text-muted mt-2">
                                                 <i class="bi bi-clock me-2"></i>
-                                                <small class="me-3">{{ news.created_at|date:"d.m.Y H:i" }}</small>
+                                                <small class="me-3">{{ news_item.created_at|date:"d.m.Y H:i" }}</small>
                                                 <i class="bi bi-eye me-1"></i>
-                                                <small>{{ news.views_count }}</small>
+                                                <small>{{ news_item.views_count }}</small>
                                             </div>
+                                            {% include 'news/includes/like_button.html' with news_item=news_item %}
                                         </div>
                                     </div>
                                 {% endif %}

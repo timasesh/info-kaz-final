@@ -46,6 +46,11 @@ def index(request):
     
     # Get the News of the Day, exclude deleted
     news_of_the_day = News.objects.filter(is_news_of_the_day=True, is_published=True, is_deleted=False).first()
+    if news_of_the_day and request.user.is_authenticated:
+        news_of_the_day.is_liked = news_of_the_day.likes.filter(user=request.user).exists()
+    else:
+        if news_of_the_day:
+            news_of_the_day.is_liked = False
 
     # Get other news, exclude News of the Day and deleted
     news_list = News.objects.filter(is_published=True, is_deleted=False).exclude(is_news_of_the_day=True).order_by('-created_at')
@@ -58,6 +63,14 @@ def index(request):
             Q(content__icontains=search_query_lower)
         )
     
+    # Add is_liked status for each news item in news_list
+    if request.user.is_authenticated:
+        for news_item in news_list:
+            news_item.is_liked = news_item.likes.filter(user=request.user).exists()
+    else:
+        for news_item in news_list:
+            news_item.is_liked = False
+
     news_list = news_list[:10] # Apply slice after filtering (or not filtering if search_query is empty)
     
     categories = Category.objects.all()
@@ -90,6 +103,14 @@ def category_detail(request, category_slug):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    # Add is_liked status for each news item in the current page
+    if request.user.is_authenticated:
+        for news_item in page_obj.object_list:
+            news_item.is_liked = news_item.likes.filter(user=request.user).exists()
+    else:
+        for news_item in page_obj.object_list:
+            news_item.is_liked = False
+
     available_dates = News.objects.filter(
         category=category,
         is_published=True
@@ -105,6 +126,7 @@ def category_detail(request, category_slug):
         'categories': categories,
     }
     return render(request, 'news/category_detail.html', context)
+
 def news_detail(request, news_slug):
     # Allow preview of deleted news for admin users
     if request.user.is_staff and request.GET.get('preview_deleted') == 'True':
