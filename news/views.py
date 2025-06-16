@@ -79,6 +79,7 @@ def index(request):
         'news_list': news_list, # Pass other news
         'categories': categories,
         'search_query': search_query,
+        'is_detail_page': False, # Добавлено: это не страница деталей новости
     }
     return render(request, 'news/index.html', context)
 
@@ -124,6 +125,7 @@ def category_detail(request, category_slug):
         'date_filter': date_filter,
         'available_dates': available_dates,
         'categories': categories,
+        'is_detail_page': False, # Добавлено: это не страница деталей новости
     }
     return render(request, 'news/category_detail.html', context)
 
@@ -161,6 +163,7 @@ def news_detail(request, news_slug):
         'recommended_news': recommended_news,
         'categories': categories,
         'is_liked': is_liked,  # добавлено для шаблона
+        'is_detail_page': True, # Добавлено: это страница деталей новости
     }
     return render(request, 'news/news_detail.html', context)
 

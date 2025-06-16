@@ -1,14 +1,26 @@
 {% comment %}
 Этот шаблон отображает кнопку лайка и количество лайков для новости.
-Ожидаемые переменные: news_item (объект новости), user (текущий пользователь).
+Ожидаемые переменные: news_item (объект новости), user (текущий пользователь), is_detail_page (булево значение, True если это страница news_detail).
 {% endcomment %}
+{% load static %}
 
-<div class="like-section mt-auto">
-    <button class="like-btn {% if user.is_authenticated and news_item.is_liked %} liked{% endif %}"
-            data-news-id="{{ news_item.id }}"
-            {% if not user.is_authenticated %}disabled title="Войдите, чтобы лайкать"{% endif %}>
-        <span class="like-heart"></span>
-        <span class="likes-count">{{ news_item.likes.count }}</span>
-    </button>
-    <span class="like-label ms-2">Понравилось</span>
+<div class="like-section mt-auto d-flex align-items-center">
+    {% if is_detail_page %}
+        <button class="like-btn {% if user.is_authenticated and news_item.is_liked %} liked{% endif %}"
+                data-news-id="{{ news_item.id }}"
+                {% if not user.is_authenticated %}disabled title="Войдите, чтобы лайкать"{% endif %}>
+            <img class="like-heart-img" 
+                 src="{% if news_item.is_liked and user.is_authenticated %}{% static 'news/images/heart_filled.png' %}{% else %}{% static 'news/images/heart_outlined.png' %}{% endif %}" 
+                 alt="Heart" style="width: 24px; height: 24px;">
+            <span class="likes-count">{{ news_item.likes.count }}</span>
+        </button>
+        <span class="like-label ms-2">Понравилось</span>
+    {% else %}
+        {# На страницах списка отображаем только количество лайков и незакрашенное сердце #}
+        <img class="like-heart-img" 
+             src="{% static 'news/images/heart_outlined.png' %}" 
+             alt="Heart" style="width: 24px; height: 24px; margin-right: 0.3em;">
+        <span class="likes-count me-2">{{ news_item.likes.count }}</span>
+        <span class="like-label">Понравилось</span>
+    {% endif %}
 </div> 
