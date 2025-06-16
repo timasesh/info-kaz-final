@@ -13,6 +13,10 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Category, News, Contact, FooterContent
 from .forms import ContactForm, NewsAdminForm, CategoryAdminForm
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.decorators.http import require_POST
+from .models import Like
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -500,21 +504,24 @@ def admin_footer_edit(request):
     }
     return render(request, 'news/admin/footer_edit.html', context) 
 
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from .models import News, Like
-
-# ...existing code...
-
+@require_POST
 @login_required
 def toggle_like(request, news_id):
-    news = get_object_or_404(News, id=news_id, is_published=True, is_deleted=False)
+    try:
+        news = News.objects.get(id=news_id, is_published=True, is_deleted=False)
+    except News.DoesNotExist:
+        return JsonResponse({'error': 'Новость не найдена или недоступна.'}, status=404)
+
+    # Проверяем, существует ли лайк от текущего пользователя для этой новости
     like, created = Like.objects.get_or_create(user=request.user, news=news)
+
     if not created:
-        # Уже лайкнул — убираем лайк
+        # Если лайк уже существовал, удаляем его (пользователь убрал лайк)
         like.delete()
         liked = False
     else:
+        # Если лайк создан, значит, пользователь лайкнул
         liked = True
+    
     likes_count = news.likes.count()
     return JsonResponse({'liked': liked, 'likes_count': likes_count})

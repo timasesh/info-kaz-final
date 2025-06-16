@@ -100,7 +100,11 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const btn = document.getElementById('like-btn');
-    if (!btn) return;
+    console.log('Кнопка лайка найдена:', btn);
+    if (!btn) {
+        console.warn('Кнопка лайка не найдена в DOM. Проверьте ID.');
+        return;
+    }
     
     // Get CSRF token from cookie
     function getCookie(name) {
