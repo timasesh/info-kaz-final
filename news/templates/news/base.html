@@ -30,6 +30,50 @@
         .share-btn:hover {
             transform: scale(1.1);
         }
+        /* Стили для адаптивных изображений */
+        .img-fluid {
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        .card-img-top-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        .card-img-top-container img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .news-of-the-day-card .img-container {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+        }
+        .news-of-the-day-card .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        @media (max-width: 768px) {
+            .news-of-the-day-card .img-container {
+                height: 250px;
+            }
+            .card-img-top-container img {
+                height: 150px;
+            }
+        }
+        /* Предотвращение переполнения контента */
+        .card-body {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        .news-content img {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -111,25 +155,7 @@
         const HEART_FILLED_SRC = '{% static 'news/images/heart_filled.png' %}';
         const HEART_OUTLINED_SRC = '{% static 'news/images/heart_outlined.png' %}';
 
-        // Функция для шаринга в WhatsApp
-        function shareToWhatsApp(url, title) {
-            const text = `${title}\n\nЧитать далее: ${url}`;
-            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-            window.open(whatsappUrl, '_blank');
-        }
-
         document.body.addEventListener('click', function(event) {
-            // Обработка кнопки шаринга
-            const shareBtn = event.target.closest('.share-btn');
-            if (shareBtn) {
-                const newsId = shareBtn.dataset.newsId;
-                const newsTitle = shareBtn.dataset.newsTitle;
-                const currentUrl = window.location.origin + `/news/${newsId}/`;
-                shareToWhatsApp(currentUrl, newsTitle);
-                return;
-            }
-
-            // Обработка кнопки лайка
             const btn = event.target.closest('.like-btn');
             if (!btn) return; 
 
@@ -168,25 +194,26 @@
             const currentLikesCount = parseInt(likesCountSpan.innerText);
             const wasLiked = btn.classList.contains('liked');
 
-            // Оптимистичное обновление UI
+            // Мгновенное обновление UI
             const newLikedState = !wasLiked;
             const newLikesCount = newLikedState ? currentLikesCount + 1 : currentLikesCount - 1;
 
-            btn.classList.toggle('liked', newLikedState);
-            if (likesCountSpan) {
+            // Применяем все изменения UI одновременно
+            requestAnimationFrame(() => {
+                btn.classList.toggle('liked', newLikedState);
                 likesCountSpan.innerText = newLikesCount;
-            }
-            if (likeHeartImg) {
                 likeHeartImg.src = newLikedState ? HEART_FILLED_SRC : HEART_OUTLINED_SRC;
-                // Анимация
+                
+                // Анимация только при лайке
                 if (newLikedState) {
                     likeHeartImg.classList.remove('pop');
                     void likeHeartImg.offsetWidth; 
                     likeHeartImg.classList.add('pop');
                     setTimeout(() => likeHeartImg.classList.remove('pop'), 400);
                 }
-            }
+            });
 
+            // Отправляем запрос на сервер
             fetch(`/news/${newsId}/like/`, {
                 method: 'POST',
                 headers: {
@@ -197,33 +224,21 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    // Откат оптимистичного обновления в случае ошибки
-                    btn.classList.toggle('liked', wasLiked);
-                    if (likesCountSpan) {
+                    // Откат изменений в случае ошибки
+                    requestAnimationFrame(() => {
+                        btn.classList.toggle('liked', wasLiked);
                         likesCountSpan.innerText = currentLikesCount;
-                    }
-                    if (likeHeartImg) {
                         likeHeartImg.src = wasLiked ? HEART_FILLED_SRC : HEART_OUTLINED_SRC;
-                    }
+                    });
 
                     if (response.status === 403) {
                         alert('Пожалуйста, войдите, чтобы лайкать новости.');
                     }
                     throw new Error('Ошибка сети или сервера: ' + response.statusText);
                 }
-                return response.json();
-            })
-            .then(data => {
-                // Здесь, по идее, ничего не нужно делать, так как UI уже обновлен оптимистично.
-                // Но если вы хотите быть на 100% уверенным, можно еще раз обновить
-                // на основе данных с сервера (это покроет крайние случаи расхождений).
-                // btn.classList.toggle('liked', data.liked);
-                // if (likesCountSpan) { likesCountSpan.innerText = data.likes_count; }
             })
             .catch(error => {
                 console.error('Ошибка при обработке лайка:', error);
-                // Откат оптимистичного обновления уже происходит в .then(response => { if (!response.ok) {...}})
-                // Этот блок catch обрабатывает другие ошибки сети или JavaScript.
             });
         });
     });

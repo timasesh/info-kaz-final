@@ -54,6 +54,7 @@
                     <li><a class="dropdown-item" href="https://twitter.com/intent/tweet?url={{ current_url }}&text={{ news_title }}" target="_blank"><i class="bi bi-twitter me-2"></i>Twitter</a></li>
                     <li><a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{ current_url }}" target="_blank"><i class="bi bi-facebook me-2"></i>Facebook</a></li>
                     <li><a class="dropdown-item" href="https://t.me/share/url?url={{ current_url }}&text={{ news_title }}" target="_blank"><i class="bi bi-telegram me-2"></i>Telegram</a></li>
+                    <li><a class="dropdown-item" href="https://wa.me/?text={{ news_title }}%0A%0AЧитать далее: {{ current_url }}" target="_blank"><i class="bi bi-whatsapp me-2"></i>WhatsApp</a></li>
                     <li><a class="dropdown-item" href="mailto:?subject={{ news_title }}&body={{ current_url }}"><i class="bi bi-envelope me-2"></i>Email</a></li>
                     {% endwith %}
                 </ul>

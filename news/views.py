@@ -149,7 +149,8 @@ def news_detail(request, news_slug):
     
     # Get 5 random recommended news (excluding the current one)
     recommended_news = News.objects.filter(
-        is_published=True
+        is_published=True,
+        is_deleted=False
     ).exclude(slug=news_slug).order_by('?')[:5]
 
     # Логика для лайка

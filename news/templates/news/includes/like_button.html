@@ -15,12 +15,6 @@
             <span class="likes-count">{{ news_item.likes.count }}</span>
         </button>
         <span class="like-label ms-2">Понравилось</span>
-        <button class="share-btn ms-3" 
-                data-news-id="{{ news_item.id }}"
-                data-news-title="{{ news_item.title }}"
-                title="Поделиться в WhatsApp">
-            <i class="bi bi-whatsapp"></i>
-        </button>
     {% else %}
         {# На страницах списка отображаем только количество лайков и незакрашенное сердце #}
         <img class="like-heart-img" 
