@@ -32,7 +32,7 @@
                         <small>{{ news_of_the_day.views_count }}</small>
                     </div>
                 </div>
-                {% include 'news/includes/like_button.html' with news_item=news_of_the_day %}
+                {% include 'news/includes/like_button.html' with news_item=news_of_the_day is_detail_page=True %}
             </div>
         </div>
         {% else %}
@@ -53,7 +53,7 @@
                         <small>{{ news_of_the_day.views_count }}</small>
                     </div>
                 </div>
-                {% include 'news/includes/like_button.html' with news_item=news_of_the_day %}
+                {% include 'news/includes/like_button.html' with news_item=news_of_the_day is_detail_page=True %}
             </div>
          </div>
         {% endif %}
@@ -91,7 +91,7 @@
                                 <small>{{ news_item.views_count }}</small>
                                 </div>
                             </div>
-                        {% include 'news/includes/like_button.html' with news_item=news_item %}
+                        {% include 'news/includes/like_button.html' with news_item=news_item is_detail_page=True %}
                     </div>
                 </article>
             </div>

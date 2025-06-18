@@ -17,6 +17,24 @@
             -moz-user-select: none;
             -ms-user-select: none;
             pointer-events: none;
+            width: 36px !important;
+            height: 36px !important;
+            transition: transform 0.15s;
+        }
+        .like-btn {
+            min-width: 48px;
+            min-height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 10px;
+            font-size: 1.2rem;
+            border: none;
+            background: transparent;
+        }
+        .like-btn.liked .like-heart-img {
+            transform: scale(1.15);
         }
         .share-btn {
             background: none;
@@ -45,6 +63,8 @@
             width: 100%;
             height: 200px;
             object-fit: cover;
+            display: block;
+            border-radius: 8px;
         }
         .news-of-the-day-card .img-container {
             width: 100%;
@@ -61,7 +81,14 @@
                 height: 250px;
             }
             .card-img-top-container img {
-                height: 150px;
+                height: 120px;
+                max-width: 100vw;
+            }
+        }
+        @media (max-width: 480px) {
+            .card-img-top-container img {
+                height: 90px;
+                max-width: 100vw;
             }
         }
         /* Предотвращение переполнения контента */
@@ -71,8 +98,10 @@
             hyphens: auto;
         }
         .news-content img {
-            max-width: 100%;
-            height: auto;
+            max-width: 100% !important;
+            height: auto !important;
+            object-fit: contain;
+            display: block;
         }
     </style>
 </head>
