@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from .models import Like
+from news.utils.weather import get_almaty_weather
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -74,12 +75,14 @@ def index(request):
     news_list = news_list[:10] # Apply slice after filtering (or not filtering if search_query is empty)
     
     categories = Category.objects.all()
+    weather = get_almaty_weather()
     context = {
         'news_of_the_day': news_of_the_day, # Pass News of the Day
         'news_list': news_list, # Pass other news
         'categories': categories,
         'search_query': search_query,
         'is_detail_page': False, # Добавлено: это не страница деталей новости
+        'weather': weather, # Добавлено: погода
     }
     return render(request, 'news/index.html', context)
 
