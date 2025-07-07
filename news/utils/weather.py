@@ -1,7 +1,10 @@
 import requests
+import os
 
 def get_almaty_weather():
-    api_key = "00665463193f99ca4289ea01d7b3f069"
+    api_key = os.environ.get("OPENWEATHER_API_KEY")
+    if not api_key:
+        return None
     city = "Almaty"
     url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=ru"
     try:
