@@ -19,6 +19,7 @@ from django.views.decorators.http import require_POST
 from .models import Like
 from news.utils.weather import get_almaty_weather
 from news.utils.currency import get_usd_kzt_rate
+from django.core.cache import cache
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -42,6 +43,20 @@ def get_footer_content(request):
             editor_info='Главный редактор: Иванов И.И.'
         )
     return {'footer_content': footer_content}
+
+def get_cached_weather():
+    weather = cache.get('almaty_weather')
+    if weather is None:
+        weather = get_almaty_weather()
+        cache.set('almaty_weather', weather, 1800)  # 30 минут
+    return weather
+
+def get_cached_usd_kzt_rate():
+    usd_kzt = cache.get('usd_kzt_rate')
+    if usd_kzt is None:
+        usd_kzt = get_usd_kzt_rate()
+        cache.set('usd_kzt_rate', usd_kzt, 1800)  # 30 минут
+    return usd_kzt
 
 def index(request):
     search_query = request.GET.get('search', '')
@@ -76,8 +91,8 @@ def index(request):
     news_list = news_list[:10] # Apply slice after filtering (or not filtering if search_query is empty)
     
     categories = Category.objects.all()
-    weather = get_almaty_weather()
-    usd_kzt = get_usd_kzt_rate()
+    weather = get_cached_weather()
+    usd_kzt = get_cached_usd_kzt_rate()
     context = {
         'news_of_the_day': news_of_the_day, # Pass News of the Day
         'news_list': news_list, # Pass other news
