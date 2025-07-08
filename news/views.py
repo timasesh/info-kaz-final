@@ -552,23 +552,20 @@ def admin_footer_edit(request):
     return render(request, 'news/admin/footer_edit.html', context) 
 
 @require_POST
-@login_required
 def toggle_like(request, news_id):
     try:
         news = News.objects.get(id=news_id, is_published=True, is_deleted=False)
     except News.DoesNotExist:
         return JsonResponse({'error': 'Новость не найдена или недоступна.'}, status=404)
 
-    # Проверяем, существует ли лайк от текущего пользователя для этой новости
-    like, created = Like.objects.get_or_create(user=request.user, news=news)
+    ip_address = get_client_ip(request)
+    like, created = Like.objects.get_or_create(ip_address=ip_address, news=news)
 
     if not created:
-        # Если лайк уже существовал, удаляем его (пользователь убрал лайк)
         like.delete()
         liked = False
     else:
-        # Если лайк создан, значит, пользователь лайкнул
         liked = True
-    
+
     likes_count = news.likes.count()
     return JsonResponse({'liked': liked, 'likes_count': likes_count})
