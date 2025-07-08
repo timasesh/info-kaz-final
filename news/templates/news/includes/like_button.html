@@ -7,9 +7,7 @@
 <div class="like-section mt-auto d-flex align-items-center">
     <button class="like-btn{% if news_item.is_liked %} liked{% endif %}"
             data-news-id="{{ news_item.id }}">
-        <img class="like-heart-img" 
-             src="{% if news_item.is_liked %}{% static 'news/images/heart_filled.png' %}{% else %}{% static 'news/images/heart_outlined.png' %}{% endif %}" 
-             alt="Heart" style="width: 24px; height: 24px;">
+        <i class="bi {% if news_item.is_liked %}bi-heart-fill{% else %}bi-heart{% endif %} like-heart-icon" style="font-size: 24px;"></i>
         <span class="likes-count">{{ news_item.likes.count }}</span>
     </button>
     <span class="like-label ms-2">Понравилось</span>

@@ -680,3 +680,17 @@ footer .footer-title {
     font-size: 1rem;
     color: #888;
 }
+
+.like-heart-icon {
+    color: #e0e0e0;
+    transition: color 0.2s, transform 0.15s;
+    user-select: none;
+    pointer-events: none;
+}
+.like-btn.liked .like-heart-icon {
+    color: #e63946;
+    transform: scale(1.15);
+}
+.like-btn:active .like-heart-icon {
+    transform: scale(1.25);
+}

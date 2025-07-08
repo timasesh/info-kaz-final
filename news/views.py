@@ -60,47 +60,33 @@ def get_cached_usd_kzt_rate():
 
 def index(request):
     search_query = request.GET.get('search', '')
-    
+    ip_address = get_client_ip(request)
     # Get the News of the Day, exclude deleted
     news_of_the_day = News.objects.filter(is_news_of_the_day=True, is_published=True, is_deleted=False).first()
-    if news_of_the_day and request.user.is_authenticated:
-        news_of_the_day.is_liked = news_of_the_day.likes.filter(user=request.user).exists()
-    else:
-        if news_of_the_day:
-            news_of_the_day.is_liked = False
-
+    if news_of_the_day:
+        news_of_the_day.is_liked = news_of_the_day.likes.filter(ip_address=ip_address).exists()
     # Get other news, exclude News of the Day and deleted
     news_list = News.objects.filter(is_published=True, is_deleted=False).exclude(is_news_of_the_day=True).order_by('-created_at')
-    
     if search_query:
-        # Convert search_query to lower case for case-insensitive comparison
         search_query_lower = search_query.lower()
         news_list = news_list.filter(
             Q(title__icontains=search_query_lower) |
             Q(content__icontains=search_query_lower)
         )
-    
-    # Add is_liked status for each news item in news_list
-    if request.user.is_authenticated:
-        for news_item in news_list:
-            news_item.is_liked = news_item.likes.filter(user=request.user).exists()
-    else:
-        for news_item in news_list:
-            news_item.is_liked = False
-
-    news_list = news_list[:10] # Apply slice after filtering (or not filtering if search_query is empty)
-    
+    for news_item in news_list:
+        news_item.is_liked = news_item.likes.filter(ip_address=ip_address).exists()
+    news_list = news_list[:10]
     categories = Category.objects.all()
     weather = get_cached_weather()
     usd_kzt = get_cached_usd_kzt_rate()
     context = {
-        'news_of_the_day': news_of_the_day, # Pass News of the Day
-        'news_list': news_list, # Pass other news
+        'news_of_the_day': news_of_the_day,
+        'news_list': news_list,
         'categories': categories,
         'search_query': search_query,
-        'is_detail_page': False, # Добавлено: это не страница деталей новости
-        'weather': weather, # Добавлено: погода
-        'usd_kzt': usd_kzt, # Добавлено: курс доллара
+        'is_detail_page': False,
+        'weather': weather,
+        'usd_kzt': usd_kzt,
     }
     return render(request, 'news/index.html', context)
 
