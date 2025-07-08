@@ -18,6 +18,7 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from .models import Like
 from news.utils.weather import get_almaty_weather
+from news.utils.currency import get_usd_kzt_rate
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -76,6 +77,7 @@ def index(request):
     
     categories = Category.objects.all()
     weather = get_almaty_weather()
+    usd_kzt = get_usd_kzt_rate()
     context = {
         'news_of_the_day': news_of_the_day, # Pass News of the Day
         'news_list': news_list, # Pass other news
@@ -83,6 +85,7 @@ def index(request):
         'search_query': search_query,
         'is_detail_page': False, # Добавлено: это не страница деталей новости
         'weather': weather, # Добавлено: погода
+        'usd_kzt': usd_kzt, # Добавлено: курс доллара
     }
     return render(request, 'news/index.html', context)
 

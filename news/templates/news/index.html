@@ -4,16 +4,27 @@
 {% block title %}Главная - INFO_KAZ{% endblock %}
 
 {% block content %}
-{# Блок погоды #}
-{% if weather %}
-<div class="weather-widget card mb-4 p-3 d-flex flex-row align-items-center" style="max-width: 350px;">
-    <img src="https://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="Погода" style="width:48px;height:48px;">
-    <div class="ms-3">
-        <div><strong>Погода в {{ weather.city }}</strong></div>
-        <div>{{ weather.temp|floatformat:0 }}°C, {{ weather.description|capfirst }}</div>
+{# Блок погоды и курса доллара #}
+<div class="d-flex flex-row gap-3 mb-4">
+    {% if weather %}
+    <div class="weather-widget card p-3 d-flex flex-row align-items-center" style="max-width: 350px;">
+        <img src="https://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="Погода" style="width:48px;height:48px;">
+        <div class="ms-3">
+            <div><strong>Погода в {{ weather.city }}</strong></div>
+            <div>{{ weather.temp|floatformat:0 }}°C, {{ weather.description|capfirst }}</div>
+        </div>
     </div>
+    {% endif %}
+    {% if usd_kzt %}
+    <div class="currency-widget card p-3 d-flex flex-row align-items-center" style="max-width: 250px;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/US_Dollar_Symbol.png" alt="USD" style="width:32px;height:32px;">
+        <div class="ms-3">
+            <div><strong>Курс USD/KZT</strong></div>
+            <div>1 USD = {{ usd_kzt|floatformat:2 }} ₸</div>
+        </div>
+    </div>
+    {% endif %}
 </div>
-{% endif %}
 
 {% if news_of_the_day %}
 <div class="card news-of-the-day-card">
