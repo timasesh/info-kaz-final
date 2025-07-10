@@ -5,7 +5,8 @@ def get_almaty_weather():
     api_key = os.environ.get("OPENWEATHER_API_KEY")
     if not api_key:
         return None
-    city = "Almaty"
+    # Меняем город на Талдыкорган (центр Алматинской области)
+    city = "Taldykorgan"
     url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=ru"
     try:
         response = requests.get(url, timeout=5)
@@ -15,8 +16,8 @@ def get_almaty_weather():
             "temp": data["main"]["temp"],
             "description": data["weather"][0]["description"],
             "icon": data["weather"][0]["icon"],
-            "city": data["name"]
+            "city": "Алматинская область"  # Переопределяем название для красивого вывода
         }
         return weather
     except Exception:
-        return None 
+        return None
