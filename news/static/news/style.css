@@ -694,3 +694,58 @@ footer .footer-title {
 .like-btn:active .like-heart-icon {
     transform: scale(1.25);
 }
+
+.custom-info-widget {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(26,35,126,0.06);
+    padding: 1.2rem 1.3rem;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    transition: box-shadow 0.2s;
+}
+
+.custom-info-widget:hover {
+    box-shadow: 0 4px 16px rgba(26,35,126,0.10);
+}
+
+.weather-title, .currency-title {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1.08rem;
+}
+
+.weather-desc {
+    color: #555;
+    font-size: 0.98rem;
+}
+
+.weather-icon {
+    width: 48px;
+    height: 48px;
+}
+
+.currency-icon {
+    font-size: 2rem;
+    color: var(--accent-color);
+}
+
+.currency-rates {
+    margin-left: 2.2rem;
+    font-size: 0.98rem;
+}
+
+.currency-value {
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+@media (max-width: 991px) {
+    .row > aside {
+        margin-bottom: 2rem;
+    }
+    .currency-rates {
+        margin-left: 0.5rem;
+    }
+}

@@ -5,35 +5,43 @@
 
 {% block content %}
 {# Блок погоды и курса доллара #}
-<div class="d-flex flex-row gap-3 mb-4">
-    {% if weather %}
-    <div class="weather-widget card p-3 d-flex flex-row align-items-center" style="max-width: 350px;">
-        <img src="https://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="Погода" style="width:48px;height:48px;">
-        <div class="ms-3">
-            <div><strong>Погода в {{ weather.city }}</strong></div>
-            <div>{{ weather.temp|floatformat:0 }}°C, {{ weather.description|capfirst }}</div>
+<div class="row mb-4">
+    <div class="col-lg-9 col-md-8 order-2 order-lg-1">
+        {# Здесь будет остальной контент страницы (новости и т.д.) #}
+    </div>
+    <aside class="col-lg-3 col-md-4 order-1 order-lg-2">
+        {% if weather %}
+        <div class="weather-widget custom-info-widget mb-3">
+            <div class="d-flex align-items-center">
+                <img src="https://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="Погода" class="weather-icon me-2">
+                <div>
+                    <div class="weather-title">Погода в {{ weather.city }}</div>
+                    <div class="weather-desc">{{ weather.temp|floatformat:0 }}°C, {{ weather.description|capfirst }}</div>
+                </div>
+            </div>
         </div>
-    </div>
-    {% endif %}
-    {% if usd_kzt or eur_kzt or rub_kzt %}
-<div class="currency-widget card p-3 d-flex flex-row align-items-center" style="max-width: 350px;">
-    <span style="font-size:32px;">💵</span>
-    <div class="ms-3">
-        <div><strong>Курсы валют</strong></div>
-        {% if usd_kzt %}
-            <div>1 USD = {{ usd_kzt|floatformat:2 }} ₸</div>
         {% endif %}
-        {% if eur_kzt %}
-            <div>1 EUR = {{ eur_kzt|floatformat:2 }} ₸</div>
+        {% if usd_kzt or eur_kzt or rub_kzt %}
+        <div class="currency-widget custom-info-widget">
+            <div class="d-flex align-items-center mb-2">
+                <span class="currency-icon me-2">💵</span>
+                <span class="currency-title">Курсы валют</span>
+            </div>
+            <div class="currency-rates">
+                {% if usd_kzt %}
+                    <div>1 USD = <span class="currency-value">{{ usd_kzt|floatformat:2 }}</span> ₸</div>
+                {% endif %}
+                {% if eur_kzt %}
+                    <div>1 EUR = <span class="currency-value">{{ eur_kzt|floatformat:2 }}</span> ₸</div>
+                {% endif %}
+                {% if rub_kzt %}
+                    <div>1 RUB = <span class="currency-value">{{ rub_kzt|floatformat:2 }}</span> ₸</div>
+                {% endif %}
+            </div>
+        </div>
         {% endif %}
-        {% if rub_kzt %}
-            <div>1 RUB = {{ rub_kzt|floatformat:2 }} ₸</div>
-        {% endif %}
-    </div>
+    </aside>
 </div>
-{% endif %}
-</div>
-
 {% if news_of_the_day %}
 <div class="card news-of-the-day-card">
     <div class="row g-0">
