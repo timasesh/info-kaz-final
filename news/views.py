@@ -536,7 +536,6 @@ def admin_footer_edit(request):
         'font_sizes_display': font_sizes_display, # Pass numeric font sizes for display
     }
     return render(request, 'news/admin/footer_edit.html', context) 
-
 @require_POST
 def toggle_like(request, news_id):
     try:
@@ -544,8 +543,13 @@ def toggle_like(request, news_id):
     except News.DoesNotExist:
         return JsonResponse({'error': 'Новость не найдена или недоступна.'}, status=404)
 
-    ip_address = get_client_ip(request)
-    like, created = Like.objects.get_or_create(ip_address=ip_address, news=news)
+    # Получаем session_key пользователя
+    session_key = request.session.session_key
+    if not session_key:
+        request.session.save()
+        session_key = request.session.session_key
+
+    like, created = Like.objects.get_or_create(session_key=session_key, news=news)
 
     if not created:
         like.delete()
