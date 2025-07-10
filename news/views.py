@@ -18,7 +18,7 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from .models import Like
 from news.utils.weather import get_almaty_weather
-from news.utils.currency import get_usd_kzt_rate
+from news.utils.currency import get_usd_kzt_rate, get_eur_kzt_rate, get_rub_kzt_rate
 from django.core.cache import cache
 
 def get_client_ip(request):
@@ -57,18 +57,32 @@ def get_cached_usd_kzt_rate():
         usd_kzt = get_usd_kzt_rate()
         cache.set('usd_kzt_rate', usd_kzt, 1800)  # 30 минут
     return usd_kzt
+
+def get_cached_eur_kzt_rate():
+    eur_kzt = cache.get('eur_kzt_rate')
+    if eur_kzt is None:
+        eur_kzt = get_eur_kzt_rate()
+        cache.set('eur_kzt_rate', eur_kzt, 1800)
+    return eur_kzt
+
+def get_cached_rub_kzt_rate():
+    rub_kzt = cache.get('rub_kzt_rate')
+    if rub_kzt is None:
+        rub_kzt = get_rub_kzt_rate()
+        cache.set('rub_kzt_rate', rub_kzt, 1800)
+    return rub_kzt
+
+
+
 def index(request):
     search_query = request.GET.get('search', '')
-    # Получаем session_key пользователя
     session_key = request.session.session_key
     if not session_key:
         request.session.save()
         session_key = request.session.session_key
-    # Get the News of the Day, exclude deleted
     news_of_the_day = News.objects.filter(is_news_of_the_day=True, is_published=True, is_deleted=False).first()
     if news_of_the_day:
         news_of_the_day.is_liked = news_of_the_day.likes.filter(session_key=session_key).exists()
-    # Get other news, exclude News of the Day and deleted
     news_list = News.objects.filter(is_published=True, is_deleted=False).exclude(is_news_of_the_day=True).order_by('-created_at')
     if search_query:
         search_query_lower = search_query.lower()
@@ -82,6 +96,8 @@ def index(request):
     categories = Category.objects.all()
     weather = get_cached_weather()
     usd_kzt = get_cached_usd_kzt_rate()
+    eur_kzt = get_cached_eur_kzt_rate()
+    rub_kzt = get_cached_rub_kzt_rate()
     context = {
         'news_of_the_day': news_of_the_day,
         'news_list': news_list,
@@ -90,6 +106,8 @@ def index(request):
         'is_detail_page': False,
         'weather': weather,
         'usd_kzt': usd_kzt,
+        'eur_kzt': eur_kzt,
+        'rub_kzt': rub_kzt,
     }
     return render(request, 'news/index.html', context)
 

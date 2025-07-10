@@ -15,15 +15,23 @@
         </div>
     </div>
     {% endif %}
-    {% if usd_kzt %}
-    <div class="currency-widget card p-3 d-flex flex-row align-items-center" style="max-width: 250px;">
-        <span style="font-size:32px;">💵</span>
-        <div class="ms-3">
-            <div><strong>Курс USD/KZT</strong></div>
+    {% if usd_kzt or eur_kzt or rub_kzt %}
+<div class="currency-widget card p-3 d-flex flex-row align-items-center" style="max-width: 350px;">
+    <span style="font-size:32px;">💵</span>
+    <div class="ms-3">
+        <div><strong>Курсы валют</strong></div>
+        {% if usd_kzt %}
             <div>1 USD = {{ usd_kzt|floatformat:2 }} ₸</div>
-        </div>
+        {% endif %}
+        {% if eur_kzt %}
+            <div>1 EUR = {{ eur_kzt|floatformat:2 }} ₸</div>
+        {% endif %}
+        {% if rub_kzt %}
+            <div>1 RUB = {{ rub_kzt|floatformat:2 }} ₸</div>
+        {% endif %}
     </div>
-    {% endif %}
+</div>
+{% endif %}
 </div>
 
 {% if news_of_the_day %}
