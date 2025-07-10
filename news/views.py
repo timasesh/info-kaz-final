@@ -57,14 +57,17 @@ def get_cached_usd_kzt_rate():
         usd_kzt = get_usd_kzt_rate()
         cache.set('usd_kzt_rate', usd_kzt, 1800)  # 30 минут
     return usd_kzt
-
 def index(request):
     search_query = request.GET.get('search', '')
-    ip_address = get_client_ip(request)
+    # Получаем session_key пользователя
+    session_key = request.session.session_key
+    if not session_key:
+        request.session.save()
+        session_key = request.session.session_key
     # Get the News of the Day, exclude deleted
     news_of_the_day = News.objects.filter(is_news_of_the_day=True, is_published=True, is_deleted=False).first()
     if news_of_the_day:
-        news_of_the_day.is_liked = news_of_the_day.likes.filter(ip_address=ip_address).exists()
+        news_of_the_day.is_liked = news_of_the_day.likes.filter(session_key=session_key).exists()
     # Get other news, exclude News of the Day and deleted
     news_list = News.objects.filter(is_published=True, is_deleted=False).exclude(is_news_of_the_day=True).order_by('-created_at')
     if search_query:
@@ -74,7 +77,7 @@ def index(request):
             Q(content__icontains=search_query_lower)
         )
     for news_item in news_list:
-        news_item.is_liked = news_item.likes.filter(ip_address=ip_address).exists()
+        news_item.is_liked = news_item.likes.filter(session_key=session_key).exists()
     news_list = news_list[:10]
     categories = Category.objects.all()
     weather = get_cached_weather()
@@ -92,60 +95,54 @@ def index(request):
 
 def category_detail(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
-    news_list = News.objects.filter(category=category, is_published=True, is_deleted=False).order_by('-created_at') # Exclude deleted news
-    
+    news_list = News.objects.filter(category=category, is_published=True, is_deleted=False).order_by('-created_at')
     search_query = request.GET.get('search', '')
     date_filter = request.GET.get('date_filter', '')
-    
+
     if search_query:
         news_list = news_list.filter(
             Q(title__icontains=search_query) |
             Q(content__icontains=search_query)
         )
-    
     if date_filter:
         news_list = news_list.filter(created_at__date=date_filter)
-    
-    # Add pagination for category view
-    paginator = Paginator(news_list, 5) # Show 5 news per page
+
+    paginator = Paginator(news_list, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    # Add is_liked status for each news item in the current page
-    if request.user.is_authenticated:
-        for news_item in page_obj.object_list:
-            news_item.is_liked = news_item.likes.filter(user=request.user).exists()
-    else:
-        for news_item in page_obj.object_list:
-            news_item.is_liked = False
+    # Используем session_key для анонимных пользователей
+    session_key = request.session.session_key
+    if not session_key:
+        request.session.save()
+        session_key = request.session.session_key
+    for news_item in page_obj.object_list:
+        news_item.is_liked = news_item.likes.filter(session_key=session_key).exists()
 
     available_dates = News.objects.filter(
         category=category,
         is_published=True
     ).dates('created_at', 'day', order='DESC')
-    
+
     categories = Category.objects.all()
     context = {
         'category': category,
-        'page_obj': page_obj, # Pass the Page object
+        'page_obj': page_obj,
         'search_query': search_query,
         'date_filter': date_filter,
         'available_dates': available_dates,
         'categories': categories,
-        'is_detail_page': False, # Добавлено: это не страница деталей новости
+        'is_detail_page': False,
     }
     return render(request, 'news/category_detail.html', context)
 
 def news_detail(request, news_slug):
-    # Allow preview of deleted news for admin users
     if request.user.is_staff and request.GET.get('preview_deleted') == 'True':
-        news = get_object_or_404(News, slug=news_slug) # Get news regardless of published/deleted status
+        news = get_object_or_404(News, slug=news_slug)
     else:
         news = get_object_or_404(News, slug=news_slug, is_published=True, is_deleted=False)
-    
-    # Increment views count only for regular views, once per session
-    viewed_news_list = request.session.get('viewed_news', [])
 
+    viewed_news_list = request.session.get('viewed_news', [])
     if not (request.user.is_staff and request.GET.get('preview_deleted') == 'True') and news.slug not in viewed_news_list:
         news.views_count = F('views_count') + 1
         news.save()
@@ -153,25 +150,26 @@ def news_detail(request, news_slug):
         request.session['viewed_news'] = viewed_news_list
         request.session.modified = True
         news.refresh_from_db()
-    
-    # Get 5 random recommended news (excluding the current one)
+
     recommended_news = News.objects.filter(
         is_published=True,
         is_deleted=False
     ).exclude(slug=news_slug).order_by('?')[:5]
 
-    # Логика для лайка
-    is_liked = False
-    if request.user.is_authenticated:
-        is_liked = news.likes.filter(user=request.user).exists()
+    # Используем session_key для анонимных пользователей
+    session_key = request.session.session_key
+    if not session_key:
+        request.session.save()
+        session_key = request.session.session_key
+    is_liked = news.likes.filter(session_key=session_key).exists()
 
     categories = Category.objects.all()
     context = {
         'news': news,
         'recommended_news': recommended_news,
         'categories': categories,
-        'is_liked': is_liked,  # добавлено для шаблона
-        'is_detail_page': True, # Добавлено: это страница деталей новости
+        'is_liked': is_liked,
+        'is_detail_page': True,
     }
     return render(request, 'news/news_detail.html', context)
 
