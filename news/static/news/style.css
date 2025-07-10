@@ -749,3 +749,28 @@ footer .footer-title {
         margin-left: 0.5rem;
     }
 }
+
+.main-content-with-sidebar {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 2rem;
+}
+
+.main-content-with-sidebar .main-content {
+    flex: 1 1 70%;
+}
+
+.main-content-with-sidebar .sidebar-right {
+    flex: 0 0 300px;
+}
+
+@media (max-width: 991px) {
+    .main-content-with-sidebar {
+        flex-direction: column;
+    }
+
+    .main-content-with-sidebar .sidebar-right {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+}
