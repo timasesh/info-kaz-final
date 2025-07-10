@@ -163,16 +163,14 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Like(models.Model):
-    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes', verbose_name='Пользователь')
     news = models.ForeignKey(News, on_delete=models.CASCADE, related_name='likes', verbose_name='Новость')
-    ip_address = models.CharField(max_length=45, verbose_name='IP-адрес')
+    session_key = models.CharField(max_length=40, verbose_name='Ключ сессии/браузера')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата лайка')
 
     class Meta:
-        unique_together = ('ip_address', 'news')
+        unique_together = ('session_key', 'news')
         verbose_name = 'Лайк'
         verbose_name_plural = 'Лайки'
 
     def __str__(self):
-        return f"{self.ip_address} лайкнул {self.news}"
-
+        return f"{self.session_key} лайкнул {self.news}"
