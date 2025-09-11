@@ -8,7 +8,7 @@
     <button class="like-btn{% if news_item.is_liked %} liked{% endif %}"
             data-news-id="{{ news_item.id }}">
         <i class="bi {% if news_item.is_liked %}bi-heart-fill{% else %}bi-heart{% endif %} like-heart-icon" style="font-size: 24px;"></i>
-        <span class="likes-count">{{ news_item.likes.count }}</span>
+        <span class="likes-count ms-1">{{ news_item.likes.count }}</span>
     </button>
     <span class="like-label ms-2">Понравилось</span>
 </div> 
