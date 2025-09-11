@@ -39,7 +39,12 @@
                                 </div>
                             {% else %}
                                 <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                                {% render_field field class="form-control" %}
+                                {% if field.name == 'video' %}
+                                    {% render_field field class="form-control" accept="video/mp4,video/webm,video/quicktime" %}
+                                    <div class="form-text">Загрузите видео (MP4/WebM/MOV). Максимальный размер зависит от вашего плана.</div>
+                                {% else %}
+                                    {% render_field field class="form-control" %}
+                                {% endif %}
                             {% endif %}
 
                             {% if field.help_text %}

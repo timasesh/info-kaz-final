@@ -58,6 +58,16 @@ def news_image_path(instance, filename):
     # Always return just the relative path - the storage backend will handle the full path
     return f'news-images/{now.year}/{now.month:02d}/{now.day:02d}/{safe_filename}'
 
+def news_video_path(instance, filename):
+    """
+    Returns path for uploaded news videos
+    Format: news-videos/YYYY/MM/DD/filename
+    """
+    now = timezone.now()
+    from urllib.parse import quote
+    safe_filename = quote(filename)
+    return f'news-videos/{now.year}/{now.month:02d}/{now.day:02d}/{safe_filename}'
+
 class News(models.Model):    
     title = models.CharField(max_length=200, verbose_name='Заголовок')
     content = RichTextUploadingField(verbose_name='Текст новости', config_name='default')
@@ -68,6 +78,14 @@ class News(models.Model):
         null=True, 
         blank=True,
         storage=get_storage_object()
+    )
+    video = models.FileField(
+        upload_to=news_video_path,
+        verbose_name='Видео',
+        null=True,
+        blank=True,
+        storage=get_storage_object(),
+        help_text='Поддерживаются MP4, WebM, MOV'
     )
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='news', verbose_name='Категория')
     is_published = models.BooleanField(default=False, verbose_name='Опубликовано')

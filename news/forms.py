@@ -7,7 +7,7 @@ class NewsAdminForm(forms.ModelForm):
     
     class Meta:
         model = News
-        fields = ['title', 'content', 'image', 'category', 'is_published', 'slug']
+        fields = ['title', 'content', 'image', 'video', 'category', 'is_published', 'slug']
 
 class CategoryAdminForm(forms.ModelForm):
     class Meta:
