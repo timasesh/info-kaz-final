@@ -110,7 +110,7 @@ AWS_QUERYSTRING_AUTH = False
 AWS_S3_FILE_OVERWRITE = False
 
 DEFAULT_FILE_STORAGE = 'news_portal.storage_backends.MediaStorage'
-MEDIA_URL = f"https://{AWS_S3_CDN_DOMAIN}/"
+MEDIA_URL = f"https://{AWS_S3_CDN_DOMAIN}/media/"
 MEDIA_ROOT = ''
 
 # CKEditor
