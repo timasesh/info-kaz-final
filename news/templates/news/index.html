@@ -73,14 +73,14 @@
                     {% if news_item.image %}
                     <div class="card-img-top-container">
                         <a href="{% url 'news:news_detail' news_item.slug %}">
-                            <img src="{{ news_item.image.url }}" class="img-fluid" alt="{{ news_item.title }}">
+                            <img src="{{ news_item.image.url }}" class="img-fluid" alt="{{ news_item.title }}" loading="lazy">
                         </a>
                     </div>
                     {% endif %}
                     {% if news_item.video and not news_item.image %}
                     <div class="card-img-top-container">
                         <a href="{% url 'news:news_detail' news_item.slug %}">
-                            <video style="width:100%; height:200px; object-fit:cover; border-radius:8px; background:#000;" preload="metadata">
+                            <video style="width:100%; height:200px; object-fit:cover; border-radius:8px; background:#000;" preload="metadata" playsinline muted>
                                 <source src="{{ news_item.video.url }}" type="video/mp4">
                             </video>
                         </a>

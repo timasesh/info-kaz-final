@@ -93,6 +93,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'news', 'static')]
+# WhiteNoise: сжатие и хэш-имена для бесконечного кеширования
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Явный max-age для статики, если понадобится (секунды)
+WHITENOISE_MAX_AGE = 60 * 60 * 24 * 365  # 1 год
 
 # DigitalOcean Spaces
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
