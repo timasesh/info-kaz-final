@@ -95,13 +95,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Явный max-age для статики, если понадобится (секунды)
 WHITENOISE_MAX_AGE = 60 * 60 * 24 * 365  # 1 год
 
-# DigitalOcean Spaces
-AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
-AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
-AWS_S3_ENDPOINT_URL = os.environ['AWS_S3_ENDPOINT_URL']
-AWS_S3_CDN_DOMAIN = os.environ['AWS_S3_CDN_DOMAIN']
-AWS_S3_REGION_NAME = os.environ['AWS_S3_REGION_NAME']
+# Supabase Storage
+SUPABASE_URL = os.environ.get('SUPABASE_URL', 'https://khlfpcspkgttuckedlfy.supabase.co')
+SUPABASE_ANON_KEY = os.environ.get('SUPABASE_ANON_KEY', '')
+
+# Настройки для Supabase Storage (S3-совместимый API)
+AWS_ACCESS_KEY_ID = SUPABASE_ANON_KEY
+AWS_SECRET_ACCESS_KEY = ''  # Supabase не требует secret key для публичного доступа
+AWS_STORAGE_BUCKET_NAME = 'media'
+AWS_S3_ENDPOINT_URL = f'{SUPABASE_URL}/storage/v1'
+AWS_S3_REGION_NAME = 'us-east-1'  # Любой регион для Supabase
 AWS_S3_USE_SSL = True
 AWS_DEFAULT_ACL = 'public-read'
 AWS_S3_OBJECT_PARAMETERS = {
@@ -109,9 +112,10 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_FILE_OVERWRITE = False
+AWS_S3_ADDRESSING_STYLE = 'virtual'
 
 DEFAULT_FILE_STORAGE = 'news_portal.storage_backends.MediaStorage'
-MEDIA_URL = f"https://{AWS_S3_CDN_DOMAIN}/media/"
+MEDIA_URL = f"{SUPABASE_URL}/storage/v1/object/public/media/"
 MEDIA_ROOT = ''
 
 # CKEditor
