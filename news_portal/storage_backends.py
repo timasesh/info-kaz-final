@@ -17,8 +17,9 @@ class SupabaseStorage(Storage):
     
     def _headers(self, content_type: str | None = None) -> dict:
         headers = {
-            'Authorization': f'Bearer {self.supabase_key}',
-            'apikey': self.supabase_key,
+            # Prefer service role key for server-side writes if available to bypass RLS
+            'Authorization': f"Bearer {getattr(settings, 'SUPABASE_SERVICE_ROLE_KEY', '') or self.supabase_key}",
+            'apikey': getattr(settings, 'SUPABASE_SERVICE_ROLE_KEY', '') or self.supabase_key,
         }
         if content_type:
             headers['Content-Type'] = content_type

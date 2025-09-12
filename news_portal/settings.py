@@ -102,6 +102,8 @@ WHITENOISE_MAX_AGE = 60 * 60 * 24 * 365  # 1 год
 # Supabase Storage
 SUPABASE_URL = os.environ.get('SUPABASE_URL', 'https://khlfpcspkgttuckedlfy.supabase.co')
 SUPABASE_ANON_KEY = os.environ.get('SUPABASE_ANON_KEY', '')
+# Optional: service role key for server-side writes (recommended)
+SUPABASE_SERVICE_ROLE_KEY = os.environ.get('SUPABASE_SERVICE_ROLE_KEY', '')
 
 # Настройки для Supabase Storage (прямой API)
 DEFAULT_FILE_STORAGE = 'news_portal.storage_backends.MediaStorage'
