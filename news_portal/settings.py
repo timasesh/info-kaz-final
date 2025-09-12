@@ -4,12 +4,16 @@ Django settings for news_portal project.
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Загружаем переменные из .env файла (если он существует)
+load_dotenv(BASE_DIR / '.env')
+
 # Без .env — всё из окружения DigitalOcean
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-change-this-in-production')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
@@ -99,21 +103,7 @@ WHITENOISE_MAX_AGE = 60 * 60 * 24 * 365  # 1 год
 SUPABASE_URL = os.environ.get('SUPABASE_URL', 'https://khlfpcspkgttuckedlfy.supabase.co')
 SUPABASE_ANON_KEY = os.environ.get('SUPABASE_ANON_KEY', '')
 
-# Настройки для Supabase Storage (S3-совместимый API)
-AWS_ACCESS_KEY_ID = SUPABASE_ANON_KEY
-AWS_SECRET_ACCESS_KEY = ''  # Supabase не требует secret key для публичного доступа
-AWS_STORAGE_BUCKET_NAME = 'media'
-AWS_S3_ENDPOINT_URL = f'{SUPABASE_URL}/storage/v1'
-AWS_S3_REGION_NAME = 'us-east-1'  # Любой регион для Supabase
-AWS_S3_USE_SSL = True
-AWS_DEFAULT_ACL = 'public-read'
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
-AWS_QUERYSTRING_AUTH = False
-AWS_S3_FILE_OVERWRITE = False
-AWS_S3_ADDRESSING_STYLE = 'virtual'
-
+# Настройки для Supabase Storage (прямой API)
 DEFAULT_FILE_STORAGE = 'news_portal.storage_backends.MediaStorage'
 MEDIA_URL = f"{SUPABASE_URL}/storage/v1/object/public/media/"
 MEDIA_ROOT = ''

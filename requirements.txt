@@ -26,3 +26,4 @@ urllib3==2.4.0
 webencodings==0.5.1
 whitenoise==6.9.0
 requests
+supabase==2.3.4
