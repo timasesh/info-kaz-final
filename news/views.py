@@ -83,7 +83,7 @@ def index(request):
     news_of_the_day = News.objects.filter(is_news_of_the_day=True, is_published=True, is_deleted=False).first()
     if news_of_the_day:
         news_of_the_day.is_liked = news_of_the_day.likes.filter(session_key=session_key).exists()
-    news_list = News.objects.filter(is_published=True, is_deleted=False).exclude(is_news_of_the_day=True).order_by('-created_at')
+    news_list = News.objects.filter(is_published=True, is_deleted=False).exclude(is_news_of_the_day=True).select_related('category').only('id','title','slug','created_at','views_count','image','video','category__name').order_by('-created_at')
     if search_query:
         search_query_lower = search_query.lower()
         news_list = news_list.filter(
@@ -172,7 +172,7 @@ def news_detail(request, news_slug):
     recommended_news = News.objects.filter(
         is_published=True,
         is_deleted=False
-    ).exclude(slug=news_slug).order_by('?')[:5]
+    ).exclude(slug=news_slug).only('id','title','slug','created_at').order_by('?')[:5]
 
     # Используем session_key для анонимных пользователей
     session_key = request.session.session_key

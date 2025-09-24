@@ -67,11 +67,18 @@ WSGI_APPLICATION = 'news_portal.wsgi.application'
 # База данных
 import dj_database_url
 
+# Автодетект пула Supabase: при использовании pooler лучше держать conn_max_age = 0,
+# чтобы соединения не оставались висящими и не забивали ограниченный пул.
+_database_url = os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3')
+_is_supabase_pooler = 'pooler.' in _database_url or 'pooler.supabase' in _database_url
+_default_conn_max_age = 0 if _is_supabase_pooler else int(os.environ.get('DB_CONN_MAX_AGE', '600'))
+
 DATABASES = {
     'default': dj_database_url.parse(
-        os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'),
-        conn_max_age=600,
+        _database_url,
+        conn_max_age=_default_conn_max_age,
         conn_health_checks=True,
+        ssl_require=True,
     )
 }
 
