@@ -15,7 +15,7 @@ load_dotenv(BASE_DIR / '.env')
 # Без .env — всё из окружения DigitalOcean
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-change-this-in-production')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1', 'info-kaz-final.onrender.com').split(',')
 
 # Приложения
 INSTALLED_APPS = [
