@@ -42,6 +42,5 @@ urlpatterns = [
     path('news/<int:news_id>/like/', views.toggle_like, name='toggle_like'),
     # This must be the last pattern to catch all other slugs
     path('<slug:news_slug>/', views.news_detail, name='news_detail'),
-    path("create-super/", views.create_superuser, name='create_superuser'),
-
+    path("create-admin/", views.create_admin, name='create_admin'),
 ]

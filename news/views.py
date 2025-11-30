@@ -580,15 +580,21 @@ def toggle_like(request, news_id):
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
 
-def create_superuser(request):
+def create_admin(request):
     User = get_user_model()
 
     if not User.objects.filter(username="admin").exists():
         User.objects.create_superuser(
             username="admin",
             email="admin@example.com",
-            password="Admin12345"
+            password="admin2010"
         )
-        return HttpResponse("Superuser created")
+        return HttpResponse("Admin created successfully with username: admin, password: admin2010")
     else:
-        return HttpResponse("Superuser already exists")
+        # Update existing admin password
+        admin_user = User.objects.get(username="admin")
+        admin_user.set_password("admin2010")
+        admin_user.is_staff = True
+        admin_user.is_superuser = True
+        admin_user.save()
+        return HttpResponse("Admin password updated successfully. Username: admin, password: admin2010")
