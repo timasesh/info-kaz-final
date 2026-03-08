@@ -42,6 +42,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('news:category_detail', args=[self.slug])
+
 def news_image_path(instance, filename):
     """
     Returns consistent path structure for news images
@@ -120,6 +124,9 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('news:news_detail', args=[self.slug])
 
 class Contact(models.Model):
     STATUS_CHOICES = [
